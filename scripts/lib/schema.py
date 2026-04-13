@@ -55,6 +55,72 @@ class Decomposition:
 
 
 @dataclass
+class Engagement:
+    """Engagement metrics for a reference."""
+    likes: int = 0
+    comments: int = 0
+    shares: int = 0  # retweets, reposts
+    views: int = 0
+    saves: int = 0
+    upvotes: int = 0
+    downvotes: int = 0
+    
+    @property
+    def score(self) -> int:
+        """Combined engagement score for sorting."""
+        return self.likes + self.upvotes + (self.comments * 2) + (self.shares * 3) + (self.views // 1000)
+    
+    def to_dict(self) -> dict:
+        return {
+            "likes": self.likes,
+            "comments": self.comments,
+            "shares": self.shares,
+            "views": self.views,
+            "saves": self.saves,
+            "upvotes": self.upvotes,
+            "downvotes": self.downvotes,
+            "score": self.score
+        }
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> "Engagement":
+        if not data:
+            return cls()
+        return cls(
+            likes=data.get("likes", 0),
+            comments=data.get("comments", 0),
+            shares=data.get("shares", 0),
+            views=data.get("views", 0),
+            saves=data.get("saves", 0),
+            upvotes=data.get("upvotes", 0),
+            downvotes=data.get("downvotes", 0)
+        )
+    
+    def format_compact(self) -> str:
+        """Format engagement for terminal display."""
+        parts = []
+        if self.upvotes:
+            parts.append(f"{self._format_num(self.upvotes)}↑")
+        if self.likes:
+            parts.append(f"{self._format_num(self.likes)}♥")
+        if self.comments:
+            parts.append(f"{self._format_num(self.comments)}💬")
+        if self.shares:
+            parts.append(f"{self._format_num(self.shares)}↺")
+        if self.views:
+            parts.append(f"{self._format_num(self.views)}▶")
+        return " • ".join(parts) if parts else ""
+    
+    @staticmethod
+    def _format_num(n: int) -> str:
+        if n >= 1_000_000:
+            return f"{n/1_000_000:.1f}M"
+        elif n >= 1_000:
+            return f"{n/1_000:.1f}K"
+        return str(n)
+
+
+@dataclass
 class Reference:
     """A single design reference."""
     url: str
@@ -63,6 +129,7 @@ class Reference:
     source: str
     category: str
     source_label: str = ""
+    source_type: str = "design"  # design, discussion, video, launch
     primary_tag: Optional[str] = None
     tags: list[str] = field(default_factory=list)
     image_url: Optional[str] = None
@@ -70,10 +137,15 @@ class Reference:
     has_code: bool = False
     url_quality: float = 0.5  # 0.0=collection, 0.5=unknown, 1.0=individual
     image_status: str = "unknown"  # unknown, available, unavailable
+    engagement: Optional[Engagement] = None
+    author: Optional[str] = None  # @handle, u/username, channel name
+    published_at: Optional[str] = None  # ISO date string
     
     def __post_init__(self):
         if not self.source_label:
             self.source_label = self.source.title()
+        if self.engagement is None:
+            self.engagement = Engagement()
     
     def to_dict(self) -> dict:
         return {
@@ -82,24 +154,32 @@ class Reference:
             "desc": self.description,
             "source": self.source,
             "sourceLabel": self.source_label,
+            "sourceType": self.source_type,
             "cat": self.category,
             "tag": self.primary_tag,
             "tags": self.tags,
             "img": self.image_data or self.image_url,
             "hasCode": self.has_code,
             "urlQuality": self.url_quality,
-            "imageStatus": self.image_status
+            "imageStatus": self.image_status,
+            "engagement": self.engagement.to_dict() if self.engagement else None,
+            "author": self.author,
+            "publishedAt": self.published_at
         }
     
     @classmethod
     def from_dict(cls, data: dict) -> "Reference":
         img = data.get("img") or ""
+        engagement = None
+        if data.get("engagement"):
+            engagement = Engagement.from_dict(data["engagement"])
         return cls(
             url=data["url"],
             title=data["title"],
             description=data.get("desc", data.get("description", "")),
             source=data["source"],
             source_label=data.get("sourceLabel", ""),
+            source_type=data.get("sourceType", "design"),
             category=data.get("cat", data.get("category", "")),
             primary_tag=data.get("tag"),
             tags=data.get("tags", []),
@@ -107,7 +187,10 @@ class Reference:
             image_data=img if img and img.startswith("data:") else None,
             has_code=data.get("hasCode", False),
             url_quality=data.get("urlQuality", 0.5),
-            image_status=data.get("imageStatus", "unknown")
+            image_status=data.get("imageStatus", "unknown"),
+            engagement=engagement,
+            author=data.get("author"),
+            published_at=data.get("publishedAt")
         )
 
 

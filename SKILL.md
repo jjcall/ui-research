@@ -98,34 +98,50 @@ Display the decomposition to the user:
 
 ## Step 3: Search Sprint
 
-Run 15-20 parallel WebSearch queries across design sources.
+Run 20-30 parallel WebSearch queries across design sources AND social platforms.
 
-### Source Priority
+### Source Categories
 
-**Tier 1 — Real Apps (highest value):**
-```
-site:mobbin.com {terms}
-site:screenlane.com {terms}
-```
-
-**Tier 2 — Design Galleries:**
+**Design References** (visual examples):
 ```
 site:dribbble.com {terms} UI 2025 2026
 site:behance.net {terms} UI UX case study
 site:figma.com/community {terms}
+site:mobbin.com {terms}
 ```
 
-**Tier 3 — AI Sources:**
+**Discussions** (what designers are saying):
+
+Reddit (uses ScrapeCreators API if `SCRAPECREATORS_API_KEY` is set):
+```python
+# With API key: better engagement data, more results
+search_reddit_scrapecreators(query, timeframe="month")
+
+# Fallback: WebSearch
+site:reddit.com (r/UI_Design OR r/web_design OR r/userexperience) {terms}
+```
+
+X/Twitter and HN (WebSearch):
+```
+site:x.com {terms} UI design
+site:news.ycombinator.com {terms} design
+```
+
+**Video Tutorials** (walkthroughs):
+```
+site:youtube.com {terms} UI tutorial
+site:youtube.com {terms} figma walkthrough
+```
+
+**Product Launches** (new tools):
+```
+site:producthunt.com {terms}
+```
+
+**AI Sources** (generated examples):
 ```
 site:v0.dev {terms}
 site:ui-syntax.com {terms}
-```
-
-**Tier 4 — Products & Analysis:**
-```
-{terms} UI {category} 2025 2026
-{terms} UX design patterns examples
-site:reddit.com/r/UI_Design {terms}
 ```
 
 ### Query Generation
@@ -141,9 +157,20 @@ for pattern in sub_patterns:
         queries.append(product_query + " UI")
 ```
 
-### Recency Bias
+### Recency Filtering
 
-Append "2025 2026" to queries. Skip pre-2024 results unless iconic.
+By default, prioritize recent content (last 30 days). Can be adjusted:
+
+```
+/uir planning mode UI              # Default: last 30 days
+/uir planning mode UI --days=7     # Last week only
+/uir planning mode UI --days=90    # Last quarter
+/uir planning mode UI --quick      # Fewer sources, faster
+/uir planning mode UI --deep       # More sources, comprehensive
+```
+
+For design galleries (Dribbble, Behance), append current year to queries.
+For social sources (Reddit, X, YouTube), filter by post date.
 
 ### Post-Search Filtering (CRITICAL)
 
@@ -182,84 +209,75 @@ Append "2025 2026" to queries. Skip pre-2024 results unless iconic.
 
 ## Step 4: Display Summary (Phase 1 — Default)
 
-After filtering, display a **scannable summary** in the terminal. Do NOT build the gallery yet.
+After filtering, display a **scannable summary** grouped by source type. Do NOT build the gallery yet.
 
 ### Summary Format
 
+Group results into four categories:
+1. **Design References** — Visual examples from Dribbble, Behance, Figma, Mobbin
+2. **Discussions** — Reddit threads, X posts, HN stories
+3. **Tutorials** — YouTube videos, walkthroughs
+4. **Launches** — Product Hunt, new tools
+
+Show engagement metrics inline for social sources.
+
+### Example Output
+
 ```
-📋 Found {N} references for "{CONCEPT}"
+📋 Found 67 references for "planning mode UI"
 
-{CATEGORY_1} ({count})
-  ★ {source}.com/... — {title} [img]
-  ★ {source}.com/... — {title} [img]
-  ○ {source}.com/... — {title}
-  ...
+Design References (34)
+  ★ dribbble.com/shots/25799561 — Kanban Dashboard Redesign [img]
+  ★ behance.net/gallery/198234567 — Task Board UI Kit [img]
+  ★ figma.com/community/file/1234 — Kanban Components [img]
+  ★ mobbin.com/explore/screens/abc — Linear Roadmap [img]
+  ... +30 more
 
-{CATEGORY_2} ({count})
-  ★ {source}.com/... — {title} [img]
-  ...
+Discussions (18)
+  ★ r/UI_Design: "How Linear nailed planning mode" [847↑ • 234💬]
+  ★ r/web_design: "Best planning UI patterns in 2026" [523↑ • 156💬]
+  ★ @frankchimero: "The best planning UIs let you zoom..." [1.2K♥ • 89↺]
+  ★ @round: "Linear's planning mode is *chef's kiss*" [892♥ • 45↺]
+  ○ HN: "Show HN: Open-source planning tool" [234↑ • 89💬]
+  ... +13 more
 
-{CATEGORY_3} ({count})
-  ...
+Tutorials (8)
+  ★ youtube.com/watch?v=abc — Building a Planning App in Figma [12K▶]
+  ★ youtube.com/watch?v=xyz — Linear Clone Tutorial [8.5K▶]
+  ★ youtube.com/watch?v=def — Kanban Board from Scratch [6.2K▶]
+  ... +5 more
+
+Launches (7)
+  ★ producthunt.com/posts/planwise — "AI planning assistant" [456↑]
+  ★ producthunt.com/posts/taskflow — "Visual task management" [312↑]
+  ... +5 more
 
 ───────────────────────────────────────
-{N} total • {M} high-quality (★) • {X} filtered as collections
+67 total • 34 designs • 18 discussions • 8 tutorials • 7 launches
+Top voices: @frankchimero, r/UI_Design, Juxtopposed
 
-Say "build gallery" to generate the browsable HTML, or refine your search.
+Say "build gallery", "open in tabs", or "show insights"
 ```
 
 ### Symbol Legend
 
 | Symbol | Meaning |
 |--------|---------|
-| ★ | Individual page (quality 1.0) — confirmed design reference |
-| ○ | Unknown quality (0.5) — may be useful |
-| [img] | Image likely available (known CDN pattern) |
+| ★ | Individual page (quality 1.0) |
+| ○ | Unknown quality (0.5) |
+| [img] | Image available |
+| ↑ | Upvotes (Reddit, HN, PH) |
+| ♥ | Likes (X, Dribbble) |
+| 💬 | Comments |
+| ↺ | Shares/Retweets |
+| ▶ | Views (YouTube) |
 
-### Grouping Rules
+### Engagement Display Rules
 
-1. Group references by category (from decomposition)
-2. Within each category, show up to 5 references (highest quality first)
-3. Show abbreviated URLs: `dribbble.com/shots/123...` not full URL
-4. Truncate titles to ~50 chars
-
-### Example Output
-
-```
-📋 Found 34 references for "planning mode UI"
-
-Kanban Boards (12)
-  ★ dribbble.com/shots/25799561 — Kanban Dashboard Redesign [img]
-  ★ behance.net/gallery/198234567 — Task Board UI Kit [img]
-  ★ figma.com/community/file/1234 — Kanban Components [img]
-  ○ medium.com/design/kanban-patt... — Kanban UX Patterns
-  ○ uxdesign.cc/building-better... — Building Better Boards
-  ... +7 more
-
-Timeline Views (8)
-  ★ mobbin.com/explore/screens/abc — Linear Roadmap Screen [img]
-  ★ dribbble.com/shots/25612345 — Gantt Chart Redesign [img]
-  ○ figma.com/community/file/5678 — Timeline Kit
-  ... +5 more
-
-Calendar Interfaces (6)
-  ★ dribbble.com/shots/24987654 — Calendar Week View [img]
-  ★ behance.net/gallery/187654321 — Scheduling UI [img]
-  ... +4 more
-
-View Switchers (5)
-  ★ dribbble.com/shots/25111222 — Toggle Component [img]
-  ... +4 more
-
-AI Reasoning (3)
-  ○ v0.dev/t/abc123xyz — AI Thinking States
-  ... +2 more
-
-───────────────────────────────────────
-34 total • 24 high-quality (★) • 12 filtered as collections
-
-Say "build gallery" to generate the browsable HTML, or refine your search.
-```
+1. Show engagement inline for social sources (Reddit, X, YouTube, HN, PH)
+2. Format numbers: 1.2K, 3.4M
+3. Sort by engagement score within each group
+4. Show "Top voices" in footer (most-engaged authors)
 
 ### Retain Context
 
@@ -269,10 +287,46 @@ RESEARCH_STATE: {
   concept: "{CONCEPT}",
   refs: [...all references with metadata...],
   categories: [...],
+  engagement_stats: {...},
   filtered_count: {N},
   ready_for_gallery: true
 }
 ```
+
+## Step 4b: Show Insights (Optional)
+
+When user says "show insights", analyze the discussions and generate a sentiment summary:
+
+```
+📊 What Designers Are Saying About "planning mode UI"
+
+Loved (mentioned positively):
+- Linear's keyboard-first approach (12 mentions)
+- Notion's flexibility for custom workflows (8)
+- "Finally a Gantt that doesn't suck" — r/UI_Design (6)
+
+Criticized (common complaints):
+- Mobile planning UIs are all terrible (9)
+- Feature overload, hard to learn (7)
+- "Why can't I just drag tasks?" — @round (5)
+
+Hot Debates:
+- Timeline vs Kanban for sprint planning
+- AI-generated tasks: helpful or annoying?
+
+Products Mentioned:
+- Linear (23x) — keyboard shortcuts, clean design
+- Notion (18x) — flexibility, databases
+- Asana (12x) — enterprise, integrations
+- Height (8x) — newcomer, AI features
+```
+
+### How to Generate Insights
+
+1. Scan discussion refs (Reddit, X, HN) for sentiment patterns
+2. Extract product names and count mentions
+3. Identify common themes (praise, complaints, debates)
+4. Quote specific comments when they're particularly insightful
 
 ## Step 5: Build Gallery (Phase 2 — On Demand)
 

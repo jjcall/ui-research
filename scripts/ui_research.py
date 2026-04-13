@@ -8,6 +8,7 @@ Usage:
     python ui_research.py --history
     python ui_research.py --rerun abc123
     python ui_research.py --setup          # Install Playwright
+    python ui_research.py --config         # Show/set configuration
 """
 
 import argparse
@@ -24,7 +25,7 @@ from typing import Optional
 # Add lib to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from lib import schema, decompose, search, images, render
+from lib import schema, decompose, search, images, render, config
 from lib.screenshots import (
     is_playwright_available,
     capture_screenshots_sync,
@@ -60,6 +61,9 @@ def diagnose_environment() -> dict:
     # Get cache stats
     cache_stats = get_cache_stats() if HAS_PLAYWRIGHT else {}
     
+    # Get config status
+    cfg = config.get_config()
+    
     return {
         **env.to_dict(),
         "pythonVersion": sys.version,
@@ -67,7 +71,13 @@ def diagnose_environment() -> dict:
         "researchDir": str(get_research_dir()),
         "hasHistory": get_history_path().exists(),
         "playwrightInstalled": HAS_PLAYWRIGHT,
-        "screenshotCache": cache_stats
+        "screenshotCache": cache_stats,
+        "config": {
+            "source": cfg.get("_CONFIG_SOURCE", "none"),
+            "scrapecreators": bool(cfg.get("SCRAPECREATORS_API_KEY")),
+            "openai_status": cfg.get("OPENAI_AUTH_STATUS"),
+            "openai_source": cfg.get("OPENAI_AUTH_SOURCE"),
+        }
     }
 
 
@@ -306,15 +316,21 @@ def main():
         epilog="""
 Examples:
   %(prog)s "planning mode UI"        Research a concept
+  %(prog)s "kanban" --days=7         Last week only
+  %(prog)s "dashboard" --quick       Fewer sources, faster
+  %(prog)s "onboarding" --deep       More sources, comprehensive
   %(prog)s --diagnose                Check environment
   %(prog)s --mock "kanban board"     Use mock data (testing)
   %(prog)s --history                 Show research history
-  %(prog)s --rerun abc123            Re-run previous research
   %(prog)s --open abc123             Open previous gallery
   %(prog)s --open-tabs abc123        Open refs in browser tabs
-  %(prog)s --open-tabs abc --limit 10  Open first 10 refs only
   %(prog)s --setup                   Install Playwright for screenshots
-  %(prog)s --screenshot URL          Test screenshot capture
+
+Configuration:
+  %(prog)s --config                  Show current configuration
+  %(prog)s --config set --scrapecreators-key KEY
+                                     Save ScrapeCreators API key
+  %(prog)s --config path             Print config file path
 """
     )
     
@@ -373,6 +389,25 @@ Examples:
     )
     
     parser.add_argument(
+        "--days",
+        type=int,
+        default=30,
+        help="Look back N days for recency filtering (default: 30)"
+    )
+    
+    parser.add_argument(
+        "--quick",
+        action="store_true",
+        help="Quick mode: fewer sources, faster results"
+    )
+    
+    parser.add_argument(
+        "--deep",
+        action="store_true",
+        help="Deep mode: more sources, comprehensive results"
+    )
+    
+    parser.add_argument(
         "--setup",
         action="store_true",
         help="Install Playwright and browsers for screenshot capture"
@@ -403,12 +438,57 @@ Examples:
         help="Limit number of tabs to open (default: 20)"
     )
     
+    parser.add_argument(
+        "--config",
+        nargs="?",
+        const="show",
+        metavar="ACTION",
+        help="Config management: 'show' (default), 'set', or 'path'"
+    )
+    
+    parser.add_argument(
+        "--scrapecreators-key",
+        metavar="KEY",
+        help="Set ScrapeCreators API key (use with --config set)"
+    )
+    
+    parser.add_argument(
+        "--openai-key",
+        metavar="KEY",
+        help="Set OpenAI API key (use with --config set)"
+    )
+    
     args = parser.parse_args()
     
     # Handle --diagnose
     if args.diagnose:
         print(json.dumps(diagnose_environment(), indent=2))
         return 0
+    
+    # Handle --config
+    if args.config:
+        if args.config == "path":
+            print(config.CONFIG_FILE)
+            return 0
+        elif args.config == "set":
+            sc_key = args.scrapecreators_key
+            openai_key = args.openai_key
+            
+            if not sc_key and not openai_key:
+                print("Provide at least one key to set:")
+                print("  --scrapecreators-key YOUR_KEY")
+                print("  --openai-key YOUR_KEY")
+                return 1
+            
+            path = config.setup_config(scrapecreators_key=sc_key, openai_key=openai_key)
+            print(f"✓ Configuration saved to: {path}")
+            print()
+            config.print_config_status()
+            return 0
+        else:
+            # Default: show
+            config.print_config_status()
+            return 0
     
     # Handle --setup
     if args.setup:

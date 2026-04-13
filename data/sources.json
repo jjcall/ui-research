@@ -271,8 +271,51 @@
       "individualPattern": "/r/[\\w_]+/comments/[\\w]+/",
       "collectionPatterns": ["/search", "/top", "/hot", "/new", "/rising"],
       "category": "community",
+      "sourceType": "discussion",
       "priority": 2,
       "description": "Real practitioner discussions, critiques"
+    },
+    "x": {
+      "id": "x",
+      "label": "X",
+      "color": "#000000",
+      "queryTemplate": "site:x.com {terms} (UI OR UX OR design)",
+      "ogImagePattern": null,
+      "cdnPatterns": ["pbs.twimg.com"],
+      "individualPattern": "/status/\\d+",
+      "collectionPatterns": ["/search", "/explore", "/i/"],
+      "category": "community",
+      "sourceType": "discussion",
+      "priority": 2,
+      "description": "Designer hot takes, viral UI, new releases"
+    },
+    "hackernews": {
+      "id": "hackernews",
+      "label": "Hacker News",
+      "color": "#ff6600",
+      "queryTemplate": "site:news.ycombinator.com {terms} design",
+      "ogImagePattern": null,
+      "cdnPatterns": [],
+      "individualPattern": "item\\?id=\\d+",
+      "collectionPatterns": ["/newest", "/show", "/ask", "/jobs"],
+      "category": "community",
+      "sourceType": "discussion",
+      "priority": 3,
+      "description": "Developer perspective, product launches"
+    },
+    "producthunt": {
+      "id": "producthunt",
+      "label": "Product Hunt",
+      "color": "#da552f",
+      "queryTemplate": "site:producthunt.com {terms}",
+      "ogImagePattern": "ph-files.imgix.net",
+      "cdnPatterns": ["ph-files.imgix.net"],
+      "individualPattern": "/posts/[\\w-]+",
+      "collectionPatterns": ["/topics/", "/collections/", "/categories/"],
+      "category": "launches",
+      "sourceType": "launch",
+      "priority": 3,
+      "description": "New product launches, design tools"
     }
   },
   "categories": {
@@ -315,6 +358,11 @@
       "label": "Community",
       "description": "Discussion forums and communities",
       "priority": 2
+    },
+    "launches": {
+      "label": "Launches",
+      "description": "Product launches and new tools",
+      "priority": 3
     }
   }
 }
