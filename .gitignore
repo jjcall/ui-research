@@ -10,7 +10,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# Note: scripts/lib/ is NOT ignored - it contains our source code
+# lib/ and lib64/ are common virtualenv folders, but we use venv/ instead
 lib64/
 parts/
 sdist/
@@ -43,8 +44,8 @@ htmlcov/
 # Output
 output/
 screenshots/
-*.html
-!data/gallery-template.html
+# HTML output files (but keep test fixtures and data templates)
+# *.html is too broad, only ignore output folders
 
 # OS
 .DS_Store
