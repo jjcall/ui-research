@@ -1,114 +1,97 @@
-# UI Research Plugin
+# UI Research
 
-Research UI/UX patterns for any concept. This Claude plugin decomposes design concepts into searchable patterns, runs parallel searches across design sources (Dribbble, Behance, Mobbin, v0, etc.), extracts images, and generates a browsable HTML gallery.
+Research UI/UX patterns without leaving your editor. Give it a concept like "planning mode UI" and it searches Dribbble, Behance, Mobbin, Figma Community, and other design sources. It filters out the junk (search result pages, browse pages) and shows you actual designs.
 
-## Features
+## What it does
 
-- **Smart Decomposition**: Breaks concepts into sub-patterns with synonym expansion and product-aware queries
-- **Multi-Source Search**: Searches across Dribbble, Behance, Mobbin, Figma Community, v0.dev, and more
-- **Image Extraction**: Extracts OG images and screenshots where possible
-- **Interactive Gallery**: Generates a self-contained HTML gallery with filtering and search
-- **Tier-Based Execution**: Adapts to available tools (Playwright, WebFetch, etc.)
+You ask for research. It breaks your concept into sub-patterns—kanban boards, timeline views, calendar UIs, whatever makes sense—and runs parallel searches. Then it shows you a summary in the terminal so you can decide what to do next.
 
-## Installation
+```
+📋 Found 34 references for "planning mode UI"
 
-### Install from GitHub (Recommended)
+Kanban Boards (12)
+  ★ dribbble.com/shots/25799561 — Kanban Dashboard Redesign [img]
+  ★ behance.net/gallery/198234567 — Task Board UI Kit [img]
+  ○ medium.com/design/kanban-patt... — Kanban UX Patterns
+  ... +9 more
+
+Timeline Views (8)
+  ★ mobbin.com/explore/screens/abc — Linear Roadmap Screen [img]
+  ...
+
+───────────────────────────────────────
+34 total • 24 high-quality (★) • 12 filtered as collections
+```
+
+From here you can say "build gallery" to get a browsable HTML file, "open in tabs" to just open everything in your browser, or keep refining.
+
+## Install
 
 ```bash
-# Add the repo as a marketplace
 claude marketplace add github:jjcall/ui-research
-
-# Install the plugin
 claude plugin install uir
 ```
 
-Then invoke with:
+Then:
 ```
 /uir planning mode UI
 ```
 
-### Local Development
-
+For local dev, clone the repo and point Claude at it:
 ```bash
-# Clone the repo
 git clone https://github.com/jjcall/ui-research.git ~/Code/ui-research
-
-# Run Claude with plugin directory
 claude --plugin-dir ~/Code/ui-research
 ```
 
-Then invoke with:
+## After the summary
+
+| Say this | It does this |
+|----------|--------------|
+| "build gallery" | Generates HTML with screenshots |
+| "open in tabs" | Opens all refs in your browser |
+| "open top 10" | Opens the first 10 |
+| "open dribbble only" | Just Dribbble refs |
+| "more kanban examples" | Runs more searches |
+| "remove medium" | Filters out a source |
+
+## Why Playwright
+
+Some sites don't play nice with direct image fetching. Figma Community returns 403. Mobbin needs JS to render. So the plugin uses Playwright for screenshots when you build the gallery.
+
+One-time setup:
+```bash
+python scripts/ui_research.py --setup
 ```
-/uir planning mode UI
+
+Test it works:
+```bash
+python scripts/ui_research.py --screenshot "https://figma.com/community/file/123456"
 ```
 
-## Usage
-
-### Trigger Phrases
-
-- `/uir:research planning mode UI`
-- "UI research for [concept]"
-- "Design inspiration for [concept]"
-- "How do other apps handle [concept]"
-
-### CLI
+## CLI reference
 
 ```bash
-# Research a concept
-python scripts/ui_research.py "planning mode UI"
-
-# Check environment (tier detection)
-python scripts/ui_research.py --diagnose
-
-# Use mock data (for testing)
-python scripts/ui_research.py --mock "kanban board"
-
-# View research history
-python scripts/ui_research.py --history
-
-# Re-run previous research
-python scripts/ui_research.py --rerun abc123
+python scripts/ui_research.py --diagnose          # Check environment
+python scripts/ui_research.py --setup             # Install Playwright
+python scripts/ui_research.py --screenshot URL    # Test a screenshot
+python scripts/ui_research.py --history           # Past research
+python scripts/ui_research.py --open abc123       # Open a gallery
+python scripts/ui_research.py --open-tabs abc123  # Open refs in tabs
+python scripts/ui_research.py --clear-cache       # Clear screenshots
 ```
 
-## Optional Dependencies
+## Filtering
 
-No pip install required - the plugin uses only Python standard library.
+Search results include a lot of noise—collection pages, browse pages, search result pages. The plugin filters those out and only keeps individual designs.
 
-**Optional enhancements:**
-```bash
-# Better HTML parsing (falls back to regex without this)
-pip install beautifulsoup4
+★ means it matched a known pattern for an individual page (like `/shots/123` on Dribbble).
+○ means unknown—might be good, might not.
 
-# Tier 0 full-page screenshots
-pip install playwright && playwright install chromium
-```
-
-## Tiers
-
-| Tier | Environment | Image Source | Gallery Size |
-|------|-------------|--------------|--------------|
-| 0 | CLI + Playwright | Full-page screenshots | 10-30MB |
-| 1 | Cursor (restricted) | None (links only) | 50-100KB |
-| 2 | Cursor + WebFetch | OG images extracted | 2-5MB |
-| 3 | Chrome extension | Live captures | 10-30MB |
-
-## Testing
+## Tests
 
 ```bash
-# Run all tests
-python -m pytest tests/ -v
-
-# Run with coverage
-python -m pytest tests/ --cov=scripts/lib --cov-report=html
+python -m unittest discover tests -v
 ```
-
-## How Distribution Works
-
-This GitHub repo acts as its own marketplace. Users:
-1. Add it: `claude marketplace add github:jjcall/ui-research`
-2. Install: `claude plugin install uir`
-
-The plugin name (`uir`) matches the skill name, so users get `/uir` directly (no namespace).
 
 ## License
 
