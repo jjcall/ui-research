@@ -1,10 +1,10 @@
-# Core dependencies
-beautifulsoup4>=4.12.0
-requests>=2.31.0
-
-# Optional: Playwright for Tier 0 screenshots
-# playwright>=1.40.0
-
-# Testing
-pytest>=8.0.0
-pytest-cov>=4.1.0
+# No required dependencies - uses Python standard library only
+#
+# Optional dependencies for enhanced functionality:
+#
+# beautifulsoup4>=4.12.0  # Better HTML parsing (falls back to regex)
+# playwright>=1.40.0      # Tier 0 screenshots (optional feature)
+#
+# For development/testing:
+# pytest>=8.0.0
+# pytest-cov>=4.1.0

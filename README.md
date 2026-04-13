@@ -12,16 +12,21 @@ Research UI/UX patterns for any concept. This Claude plugin decomposes design co
 
 ## Installation
 
+No pip install required - the plugin uses only Python standard library.
+
 ```bash
-# Clone the repository
-git clone https://github.com/jcalleiro/ui-research.git
+# Clone to your Claude plugins directory
+cd ~/.claude/plugins
+git clone https://github.com/jjcall/ui-research.git
+```
 
-# Install dependencies
-pip install -r requirements.txt
+**Optional enhancements:**
+```bash
+# Better HTML parsing (falls back to regex without this)
+pip install beautifulsoup4
 
-# Optional: Install Playwright for Tier 0 screenshots
-pip install playwright
-playwright install chromium
+# Tier 0 full-page screenshots
+pip install playwright && playwright install chromium
 ```
 
 ## Usage
