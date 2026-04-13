@@ -68,6 +68,8 @@ class Reference:
     image_url: Optional[str] = None
     image_data: Optional[str] = None  # base64 encoded
     has_code: bool = False
+    url_quality: float = 0.5  # 0.0=collection, 0.5=unknown, 1.0=individual
+    image_status: str = "unknown"  # unknown, available, unavailable
     
     def __post_init__(self):
         if not self.source_label:
@@ -84,7 +86,9 @@ class Reference:
             "tag": self.primary_tag,
             "tags": self.tags,
             "img": self.image_data or self.image_url,
-            "hasCode": self.has_code
+            "hasCode": self.has_code,
+            "urlQuality": self.url_quality,
+            "imageStatus": self.image_status
         }
     
     @classmethod
@@ -101,7 +105,9 @@ class Reference:
             tags=data.get("tags", []),
             image_url=img if img and not img.startswith("data:") else None,
             image_data=img if img and img.startswith("data:") else None,
-            has_code=data.get("hasCode", False)
+            has_code=data.get("hasCode", False),
+            url_quality=data.get("urlQuality", 0.5),
+            image_status=data.get("imageStatus", "unknown")
         )
 
 

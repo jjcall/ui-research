@@ -235,5 +235,117 @@ class TestFindBestImage(unittest.TestCase):
         self.assertIsNone(result)
 
 
+class TestExtractSrcsetImages(unittest.TestCase):
+    """Tests for extract_srcset_images function."""
+    
+    def test_extracts_srcset_with_widths(self):
+        html = '<img srcset="small.jpg 400w, medium.jpg 800w, large.jpg 1200w">'
+        result = images.extract_srcset_images(html)
+        self.assertEqual(len(result), 3)
+        # Should be sorted by width descending
+        self.assertEqual(result[0]["width"], 1200)
+        self.assertIn("large.jpg", result[0]["url"])
+    
+    def test_handles_srcset_without_widths(self):
+        html = '<img srcset="image.jpg 1x, image@2x.jpg 2x">'
+        result = images.extract_srcset_images(html)
+        self.assertEqual(len(result), 2)
+    
+    def test_resolves_relative_urls(self):
+        html = '<img srcset="/images/photo.jpg 800w">'
+        result = images.extract_srcset_images(html, "https://example.com")
+        self.assertIn("example.com", result[0]["url"])
+
+
+class TestScoreImageUrl(unittest.TestCase):
+    """Tests for score_image_url function."""
+    
+    def test_cdn_gets_boost(self):
+        url = "https://cdn.dribbble.com/userupload/image.jpg"
+        score = images.score_image_url(url, "dribbble")
+        self.assertGreater(score, 0.5)
+    
+    def test_thumbnail_gets_penalty(self):
+        url = "https://example.com/image_thumb.jpg"
+        score = images.score_image_url(url)
+        self.assertLess(score, 0.5)
+    
+    def test_large_indicator_gets_boost(self):
+        url = "https://example.com/image_large.jpg"
+        score = images.score_image_url(url)
+        self.assertGreater(score, 0.5)
+    
+    def test_icon_gets_penalty(self):
+        url = "https://example.com/icons/logo.png"
+        score = images.score_image_url(url)
+        self.assertLess(score, 0.5)
+
+
+class TestIsLikelyIcon(unittest.TestCase):
+    """Tests for _is_likely_icon function."""
+    
+    def test_avatar_is_icon(self):
+        self.assertTrue(images._is_likely_icon("/avatars/user.png"))
+    
+    def test_icon_path_is_icon(self):
+        self.assertTrue(images._is_likely_icon("/icons/menu.svg"))
+    
+    def test_favicon_is_icon(self):
+        self.assertTrue(images._is_likely_icon("/favicon.ico"))
+    
+    def test_small_dimension_is_icon(self):
+        # Test underscored small dimension
+        self.assertTrue(images._is_likely_icon("/image_thumb.png"))
+    
+    def test_regular_image_not_icon(self):
+        self.assertFalse(images._is_likely_icon("/images/hero-banner.jpg"))
+
+
+class TestConstructYoutubeThumbnail(unittest.TestCase):
+    """Tests for construct_youtube_thumbnail function."""
+    
+    def test_watch_url(self):
+        url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        result = images.construct_youtube_thumbnail(url)
+        self.assertIn("dQw4w9WgXcQ", result)
+        self.assertIn("i.ytimg.com", result)
+    
+    def test_short_url(self):
+        url = "https://youtu.be/dQw4w9WgXcQ"
+        result = images.construct_youtube_thumbnail(url)
+        self.assertIn("dQw4w9WgXcQ", result)
+    
+    def test_invalid_url_returns_none(self):
+        url = "https://www.youtube.com/channel/UCxyz"
+        result = images.construct_youtube_thumbnail(url)
+        self.assertIsNone(result)
+
+
+class TestGetSourceColor(unittest.TestCase):
+    """Tests for get_source_color function."""
+    
+    def test_dribbble_color(self):
+        color = images.get_source_color("dribbble")
+        self.assertEqual(color, "#ea4c89")
+    
+    def test_unknown_source_default(self):
+        color = images.get_source_color("unknown_source")
+        self.assertEqual(color, "#666666")
+
+
+class TestGetFallbackImageForSource(unittest.TestCase):
+    """Tests for get_fallback_image_for_source function."""
+    
+    def test_youtube_fallback(self):
+        url = "https://www.youtube.com/watch?v=abc123xyz00"
+        result = images.get_fallback_image_for_source(url, "youtube")
+        self.assertIn("i.ytimg.com", result)
+    
+    def test_unknown_source_returns_none(self):
+        url = "https://example.com/page"
+        result = images.get_fallback_image_for_source(url, "product")
+        self.assertIsNone(result)
+
+
 if __name__ == "__main__":
     unittest.main()

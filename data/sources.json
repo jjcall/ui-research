@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "description": "Design source metadata for search and gallery rendering",
+  "version": "1.1.0",
+  "description": "Design source metadata for search, filtering, and gallery rendering",
   "sources": {
     "dribbble": {
       "id": "dribbble",
@@ -8,7 +8,13 @@
       "color": "#ea4c89",
       "queryTemplate": "site:dribbble.com {terms} UI",
       "ogImagePattern": "cdn.dribbble.com",
-      "cdnPatterns": ["cdn.dribbble.com/userupload", "cdn.dribbble.com/users"],
+      "cdnPatterns": [
+        "cdn.dribbble.com/userupload",
+        "cdn.dribbble.com/users",
+        "d13yacurqjgara.cloudfront.net/users"
+      ],
+      "individualPattern": "/shots/\\d+",
+      "collectionPatterns": ["/search?", "/tags/", "/designers/", "/resources/", "/hiring"],
       "category": "gallery",
       "priority": 2,
       "description": "High-polish visual shots, concept art"
@@ -19,7 +25,12 @@
       "color": "#1769ff",
       "queryTemplate": "site:behance.net {terms} UI UX case study",
       "ogImagePattern": "behance.net",
-      "cdnPatterns": ["mir-s3-cdn-cf.behance.net", "mir-cdn.behance.net"],
+      "cdnPatterns": [
+        "mir-s3-cdn-cf.behance.net/project_modules",
+        "mir-cdn.behance.net"
+      ],
+      "individualPattern": "/gallery/\\d+/",
+      "collectionPatterns": ["/search/projects/", "/galleries/", "/onboarding"],
       "category": "gallery",
       "priority": 2,
       "description": "Deep design process docs, full projects"
@@ -30,7 +41,12 @@
       "color": "#f24e1e",
       "queryTemplate": "site:figma.com/community {terms}",
       "ogImagePattern": "figma.com",
-      "cdnPatterns": ["figma.com/community/thumbnail"],
+      "cdnPatterns": [
+        "figma-alpha-api.s3.us-west-2.amazonaws.com",
+        "figma.com/community/thumbnail"
+      ],
+      "individualPattern": "/community/file/\\d+",
+      "collectionPatterns": ["/community/search", "/@", "/community/explore"],
       "category": "gallery",
       "priority": 2,
       "description": "Editable design files, component kits"
@@ -42,6 +58,8 @@
       "queryTemplate": "site:mobbin.com {terms}",
       "ogImagePattern": "mobbin.com",
       "cdnPatterns": ["mobbin.com/_next/image"],
+      "individualPattern": "/explore/screens/[a-f0-9-]+",
+      "collectionPatterns": ["/explore/mobile/screens", "/explore/web/screens", "/browse/", "/explore/mobile/flows"],
       "category": "real-apps",
       "priority": 1,
       "description": "600K+ real app screens, flows, filtering"
@@ -53,6 +71,8 @@
       "queryTemplate": "site:screenlane.com {terms}",
       "ogImagePattern": "screenlane.com",
       "cdnPatterns": [],
+      "individualPattern": "/(ios|web)/flows/[\\w-]+/$",
+      "collectionPatterns": ["/screens/all/", "/filters/", "/signup/", "/pricing"],
       "category": "real-apps",
       "priority": 1,
       "description": "User flow recordings with annotations"
@@ -64,6 +84,8 @@
       "queryTemplate": "site:pageflows.com {terms}",
       "ogImagePattern": "pageflows.com",
       "cdnPatterns": [],
+      "individualPattern": "/post/[\\w-]+/[\\w-]+/[\\w-]+/",
+      "collectionPatterns": ["/web/flows/$", "/ios/flows/$", "/pricing"],
       "category": "real-apps",
       "priority": 1,
       "description": "User flow recordings with annotations"
@@ -75,6 +97,8 @@
       "queryTemplate": "site:uisources.com {terms}",
       "ogImagePattern": "uisources.com",
       "cdnPatterns": [],
+      "individualPattern": "/apps/[\\w-]+/",
+      "collectionPatterns": ["/pattern/$", "/apps/$", "/pricing"],
       "category": "real-apps",
       "priority": 2,
       "description": "Component-level patterns, App Store screenshots"
@@ -86,6 +110,8 @@
       "queryTemplate": "site:pttrns.com {terms}",
       "ogImagePattern": "pttrns.com",
       "cdnPatterns": [],
+      "individualPattern": "/patterns/\\d+",
+      "collectionPatterns": ["/patterns$", "/apps$", "/pricing"],
       "category": "real-apps",
       "priority": 3,
       "description": "iOS-specific patterns"
@@ -97,6 +123,8 @@
       "queryTemplate": "site:v0.dev {terms}",
       "ogImagePattern": "v0.dev",
       "cdnPatterns": [],
+      "individualPattern": "/(chat|t)/[\\w-]+",
+      "collectionPatterns": ["/chat$", "/docs/", "/pricing"],
       "category": "ai",
       "priority": 2,
       "description": "AI-generated React/Tailwind components",
@@ -109,6 +137,8 @@
       "queryTemplate": "site:ui-syntax.com {terms}",
       "ogImagePattern": "ui-syntax.com",
       "cdnPatterns": [],
+      "individualPattern": "/design/[\\w-]+",
+      "collectionPatterns": ["/$"],
       "category": "ai",
       "priority": 3,
       "description": "Curated AI-generated layouts with code",
@@ -121,6 +151,8 @@
       "queryTemplate": "site:inspoai.io {terms}",
       "ogImagePattern": "inspoai.io",
       "cdnPatterns": [],
+      "individualPattern": "app\\.inspoai\\.io",
+      "collectionPatterns": ["/blogs/", "/features/", "/solutions/", "/pricing", "/compare/"],
       "category": "ai",
       "priority": 3,
       "description": "AI-powered search across 150K+ assets"
@@ -132,6 +164,8 @@
       "queryTemplate": "site:lapa.ninja {terms}",
       "ogImagePattern": "lapa.ninja",
       "cdnPatterns": [],
+      "individualPattern": "/post/[\\w-]+/",
+      "collectionPatterns": ["/category/", "/color/", "/year/", "/pricing"],
       "category": "specialized",
       "priority": 3,
       "description": "Landing page inspiration"
@@ -143,6 +177,8 @@
       "queryTemplate": "site:saaspages.xyz {terms}",
       "ogImagePattern": "saaspages.xyz",
       "cdnPatterns": [],
+      "individualPattern": "/sites/[\\w-]+$",
+      "collectionPatterns": ["/blocks/", "/sites$", "/roadmap"],
       "category": "specialized",
       "priority": 3,
       "description": "SaaS-specific design patterns"
@@ -154,6 +190,8 @@
       "queryTemplate": "site:godly.website {terms}",
       "ogImagePattern": "godly.website",
       "cdnPatterns": ["res.cloudinary.com"],
+      "individualPattern": "/website/[\\w-]+-\\d+",
+      "collectionPatterns": ["/websites/", "/info"],
       "category": "specialized",
       "priority": 3,
       "description": "Award-winning web design"
@@ -165,6 +203,8 @@
       "queryTemplate": "site:awwwards.com {terms}",
       "ogImagePattern": "awwwards.com",
       "cdnPatterns": ["assets.awwwards.com"],
+      "individualPattern": "/sites/[\\w-]+$",
+      "collectionPatterns": ["/collections/", "/nominees/", "/websites/", "/blog/"],
       "category": "specialized",
       "priority": 3,
       "description": "Cutting-edge web experiences"
@@ -176,6 +216,8 @@
       "queryTemplate": "site:designspells.com {terms}",
       "ogImagePattern": "designspells.com",
       "cdnPatterns": [],
+      "individualPattern": "/spell/[\\w-]+",
+      "collectionPatterns": ["/spells$"],
       "category": "specialized",
       "priority": 3,
       "description": "Micro-interactions and animations"
@@ -187,6 +229,8 @@
       "queryTemplate": "{terms} UI {category} 2025 2026",
       "ogImagePattern": null,
       "cdnPatterns": [],
+      "individualPattern": null,
+      "collectionPatterns": [],
       "category": "products",
       "priority": 1,
       "description": "Live products to reference"
@@ -198,6 +242,8 @@
       "queryTemplate": "{terms} UX design patterns examples",
       "ogImagePattern": null,
       "cdnPatterns": [],
+      "individualPattern": null,
+      "collectionPatterns": [],
       "category": "analysis",
       "priority": 2,
       "description": "Blog posts comparing approaches"
@@ -209,6 +255,8 @@
       "queryTemplate": "{terms} UI walkthrough site:youtube.com",
       "ogImagePattern": "i.ytimg.com",
       "cdnPatterns": ["i.ytimg.com"],
+      "individualPattern": "/watch\\?v=[\\w-]+",
+      "collectionPatterns": ["/results?", "/playlist?", "/@", "/channel/"],
       "category": "video",
       "priority": 3,
       "description": "Video walkthroughs, interactions in motion"
@@ -220,6 +268,8 @@
       "queryTemplate": "site:reddit.com/r/UI_Design OR site:reddit.com/r/web_design {terms}",
       "ogImagePattern": null,
       "cdnPatterns": ["i.redd.it", "imgur.com"],
+      "individualPattern": "/r/[\\w_]+/comments/[\\w]+/",
+      "collectionPatterns": ["/search", "/top", "/hot", "/new", "/rising"],
       "category": "community",
       "priority": 2,
       "description": "Real practitioner discussions, critiques"

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Optional
 from .schema import SubPattern, Decomposition, Reference, Source
+from .filter import filter_references, score_url_quality, is_collection_page
 
 
 def _load_sources_data() -> dict:
@@ -183,6 +184,44 @@ def deduplicate_references(refs: list[Reference]) -> list[Reference]:
     return list(seen.values())
 
 
+def process_references(
+    refs: list[Reference],
+    remove_collections: bool = True,
+    min_quality: float = 0.0
+) -> list[Reference]:
+    """
+    Full processing pipeline for references.
+    
+    1. Deduplicate by URL
+    2. Score URL quality
+    3. Filter out collection pages
+    4. Sort by quality
+    
+    Args:
+        refs: Raw list of Reference objects
+        remove_collections: If True, remove collection/search pages
+        min_quality: Minimum quality score to keep (0.0-1.0)
+    
+    Returns:
+        Processed, filtered, and sorted references
+    """
+    # Step 1: Deduplicate
+    deduped = deduplicate_references(refs)
+    
+    # Step 2: Score each reference
+    for ref in deduped:
+        ref.url_quality = score_url_quality(ref.url, ref.source)
+    
+    # Step 3 & 4: Filter and sort
+    filtered = filter_references(
+        deduped,
+        remove_collections=remove_collections,
+        min_quality=min_quality
+    )
+    
+    return filtered
+
+
 def categorize_url(url: str) -> str:
     """
     Determine the source type from a URL.
@@ -235,15 +274,34 @@ def parse_search_result(
     title: str,
     description: str,
     category: str,
-    tags: list[str] = None
-) -> Reference:
+    tags: list[str] = None,
+    skip_collections: bool = False
+) -> Optional[Reference]:
     """
     Create a Reference from a search result.
     
-    Automatically determines the source from the URL.
+    Automatically determines the source from the URL and scores quality.
+    
+    Args:
+        url: The result URL
+        title: Result title
+        description: Result description
+        category: Category to assign
+        tags: Optional tags list
+        skip_collections: If True, return None for collection/search pages
+    
+    Returns:
+        Reference object, or None if skip_collections is True and URL is a collection
     """
     source_id = categorize_url(url)
     source_info = get_source_info(source_id)
+    
+    # Calculate URL quality
+    quality = score_url_quality(url, source_id)
+    
+    # Skip collection pages if requested
+    if skip_collections and is_collection_page(url, source_id):
+        return None
     
     return Reference(
         url=url,
@@ -253,5 +311,6 @@ def parse_search_result(
         source_label=source_info.get("label", source_id.title()),
         category=category,
         tags=tags or [],
-        has_code=source_info.get("hasCode", False)
+        has_code=source_info.get("hasCode", False),
+        url_quality=quality
     )

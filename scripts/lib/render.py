@@ -5,6 +5,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Optional
 from .schema import Gallery, Reference, Category, Source
+from .images import get_source_color as get_source_color_from_data
 
 
 def get_gallery_template() -> str:
@@ -82,27 +83,45 @@ def render_reference_card(ref: Reference, show_image: bool = False) -> str:
     if ref.primary_tag:
         tag_html = f'<span class="ref-tag">{escape_html(ref.primary_tag)}</span>'
     
+    source_color = get_source_color(ref.source)
+    
+    # Image or placeholder
     image_html = ""
-    if show_image and (ref.image_url or ref.image_data):
-        img_src = ref.image_data or ref.image_url
-        image_html = f'<img class="ref-image" src="{img_src}" loading="lazy" alt="">'
+    if show_image:
+        if ref.image_url or ref.image_data:
+            img_src = ref.image_data or ref.image_url
+            image_html = f'<img class="ref-image" src="{img_src}" loading="lazy" alt="" onerror="this.classList.add(\'error\')">'
+        else:
+            # Source-colored placeholder
+            image_html = f'''<div class="ref-image ref-placeholder" style="background: {source_color}">
+                <span class="placeholder-label">{escape_html(ref.source_label[:2].upper())}</span>
+            </div>'''
+    
+    # Quality indicator (only show for high or low quality)
+    quality_html = ""
+    if hasattr(ref, 'url_quality'):
+        if ref.url_quality >= 0.9:
+            quality_html = '<span class="quality-badge quality-high" title="Individual page">★</span>'
+        elif ref.url_quality <= 0.1:
+            quality_html = '<span class="quality-badge quality-low" title="Collection page">⚠</span>'
     
     tags_html = ""
     if ref.tags:
         tags_html = " ".join(f'<span class="tag-pill">{escape_html(t)}</span>' for t in ref.tags[:3])
     
     return f'''
-    <a href="{escape_html(ref.url)}" target="_blank" rel="noopener" class="ref-item" data-cat="{escape_html(ref.category)}" data-source="{escape_html(ref.source)}">
+    <a href="{escape_html(ref.url)}" target="_blank" rel="noopener" class="ref-item" data-cat="{escape_html(ref.category)}" data-source="{escape_html(ref.source)}" data-quality="{getattr(ref, 'url_quality', 0.5)}">
         {image_html}
         <div class="ref-content">
             <div class="ref-header">
                 <span class="ref-title">{escape_html(ref.title)}</span>
+                {quality_html}
                 {tag_html}
                 <span class="ref-arrow">↗</span>
             </div>
             <div class="ref-desc">{escape_html(ref.description)}</div>
             <div class="ref-meta">
-                <span class="ref-source" style="color: {get_source_color(ref.source)}">{escape_html(ref.source_label)}</span>
+                <span class="ref-source" style="color: {source_color}">{escape_html(ref.source_label)}</span>
                 {tags_html}
             </div>
         </div>
@@ -111,18 +130,8 @@ def render_reference_card(ref: Reference, show_image: bool = False) -> str:
 
 
 def get_source_color(source_id: str) -> str:
-    """Get the color for a source."""
-    colors = {
-        "dribbble": "#ea4c89",
-        "behance": "#1769ff",
-        "figma": "#f24e1e",
-        "mobbin": "#000000",
-        "v0": "#000000",
-        "youtube": "#ef4444",
-        "reddit": "#ff4500",
-        "product": "#10b981",
-    }
-    return colors.get(source_id, "#666666")
+    """Get the color for a source from sources.json."""
+    return get_source_color_from_data(source_id)
 
 
 def render_sidebar(gallery: Gallery) -> str:
@@ -366,6 +375,35 @@ DEFAULT_TEMPLATE = '''<!DOCTYPE html>
             object-fit: cover;
             border-radius: 6px;
             background: #f5f5f5;
+            flex-shrink: 0;
+        }
+        .ref-image.error {
+            display: none;
+        }
+        .ref-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.9);
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .placeholder-label {
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .quality-badge {
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 4px;
+        }
+        .quality-high {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .quality-low {
+            background: #fef3c7;
+            color: #92400e;
         }
         .ref-content { flex: 1; min-width: 0; }
         .ref-header {
@@ -559,6 +597,11 @@ DEFAULT_TEMPLATE = '''<!DOCTYPE html>
             });
         }
         
+        function getSourceColor(sourceId) {
+            const src = data.sources.find(s => s.id === sourceId);
+            return src ? src.color : '#666666';
+        }
+        
         function renderRefs() {
             const refs = filterRefs();
             const el = document.getElementById('ref-list');
@@ -567,23 +610,43 @@ DEFAULT_TEMPLATE = '''<!DOCTYPE html>
                 return;
             }
             el.innerHTML = refs.map(ref => {
-                const imgHtml = state.showImages && ref.img ? 
-                    `<img class="ref-image" src="${ref.img}" loading="lazy" alt="">` : '';
+                const color = getSourceColor(ref.source);
+                let imgHtml = '';
+                if (state.showImages) {
+                    if (ref.img) {
+                        imgHtml = `<img class="ref-image" src="${ref.img}" loading="lazy" alt="" onerror="this.classList.add('error')">`;
+                    } else {
+                        const initials = (ref.sourceLabel || ref.source || '??').substring(0, 2).toUpperCase();
+                        imgHtml = `<div class="ref-image ref-placeholder" style="background: ${color}">
+                            <span class="placeholder-label">${initials}</span>
+                        </div>`;
+                    }
+                }
                 const tagHtml = ref.tag ? `<span class="ref-tag">${ref.tag}</span>` : '';
                 const tagsHtml = (ref.tags || []).slice(0, 3).map(t => 
                     `<span class="tag-pill">${t}</span>`).join('');
+                
+                let qualityHtml = '';
+                const quality = ref.urlQuality || 0.5;
+                if (quality >= 0.9) {
+                    qualityHtml = '<span class="quality-badge quality-high" title="Individual page">★</span>';
+                } else if (quality <= 0.1) {
+                    qualityHtml = '<span class="quality-badge quality-low" title="Collection page">⚠</span>';
+                }
+                
                 return `
-                    <a href="${ref.url}" target="_blank" rel="noopener" class="ref-item">
+                    <a href="${ref.url}" target="_blank" rel="noopener" class="ref-item" data-quality="${quality}">
                         ${imgHtml}
                         <div class="ref-content">
                             <div class="ref-header">
                                 <span class="ref-title">${ref.title}</span>
+                                ${qualityHtml}
                                 ${tagHtml}
                                 <span class="ref-arrow">↗</span>
                             </div>
                             <div class="ref-desc">${ref.desc || ''}</div>
                             <div class="ref-meta">
-                                <span class="ref-source">${ref.sourceLabel}</span>
+                                <span class="ref-source" style="color: ${color}">${ref.sourceLabel}</span>
                                 ${tagsHtml}
                             </div>
                         </div>
