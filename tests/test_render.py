@@ -2,11 +2,38 @@
 
 import sys
 import unittest
+import json
+import re
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from lib import render, schema
+
+
+class TestGetGalleryTemplate(unittest.TestCase):
+    """Tests for get_gallery_template function."""
+    
+    def test_loads_template_file(self):
+        template = render.get_gallery_template()
+        
+        self.assertIn("<!DOCTYPE html>", template)
+        self.assertIn("GALLERY_DATA", template)
+        self.assertIn("{{CONCEPT}}", template)
+    
+    def test_template_has_data_marker(self):
+        template = render.get_gallery_template()
+        
+        self.assertIn("/*GALLERY_DATA*/", template)
+        self.assertIn("/*END_GALLERY_DATA*/", template)
+    
+    def test_template_is_valid_html_structure(self):
+        template = render.get_gallery_template()
+        
+        self.assertIn("<html", template)
+        self.assertIn("</html>", template)
+        self.assertIn("<head>", template)
+        self.assertIn("<body>", template)
 
 
 class TestRenderGallery(unittest.TestCase):
@@ -28,16 +55,14 @@ class TestRenderGallery(unittest.TestCase):
         html = render.render_gallery(gallery)
         
         self.assertIn("planning mode UI", html)
-        self.assertIn("Linear Project Board", html)
-        self.assertIn("Kanban Boards", html)
     
-    def test_includes_script_with_data(self):
+    def test_injects_data_at_marker(self):
         gallery = schema.Gallery(
-            concept="test",
+            concept="test concept",
             refs=[schema.Reference(
                 url="https://example.com",
-                title="Test",
-                description="",
+                title="Test Title",
+                description="Test desc",
                 source="dribbble",
                 category="test"
             )]
@@ -45,8 +70,71 @@ class TestRenderGallery(unittest.TestCase):
         
         html = render.render_gallery(gallery)
         
-        self.assertIn("const data =", html)
-        self.assertIn('"concept": "test"', html)
+        # Should have injected JSON data between markers
+        match = re.search(r'/\*GALLERY_DATA\*/(.*?)/\*END_GALLERY_DATA\*/', html, re.DOTALL)
+        self.assertIsNotNone(match)
+        
+        # Parse the injected data
+        data = json.loads(match.group(1))
+        self.assertEqual(data["concept"], "test concept")
+        self.assertEqual(len(data["refs"]), 1)
+        self.assertEqual(data["refs"][0]["title"], "Test Title")
+    
+    def test_replaces_concept_placeholder(self):
+        gallery = schema.Gallery(concept="My Research Topic")
+        html = render.render_gallery(gallery)
+        
+        # Title should be replaced
+        self.assertIn("<title>My Research Topic", html)
+        # Original placeholder should not appear
+        self.assertNotIn("{{CONCEPT}}", html)
+    
+    def test_escapes_concept_in_title(self):
+        gallery = schema.Gallery(concept="Test <script> & Stuff")
+        html = render.render_gallery(gallery)
+        
+        self.assertIn("&lt;script&gt;", html)
+        self.assertIn("&amp;", html)
+    
+    def test_includes_all_gallery_data(self):
+        gallery = schema.Gallery(
+            concept="comprehensive test",
+            categories=[
+                schema.Category(id="all", label="All", count=2),
+                schema.Category(id="cat1", label="Category 1", count=1)
+            ],
+            sources=[
+                schema.Source(id="all", label="All", color="#666666", count=1),
+                schema.Source(id="dribbble", label="Dribbble", color="#ea4c89", count=1)
+            ],
+            refs=[
+                schema.Reference(
+                    url="https://dribbble.com/shots/1",
+                    title="Ref 1",
+                    description="Description",
+                    source="dribbble",
+                    category="cat1",
+                    tags=["tag1", "tag2"],
+                    url_quality=0.9
+                )
+            ],
+            all_tags=["tag1", "tag2"],
+            tier=2
+        )
+        
+        html = render.render_gallery(gallery)
+        match = re.search(r'/\*GALLERY_DATA\*/(.*?)/\*END_GALLERY_DATA\*/', html, re.DOTALL)
+        data = json.loads(match.group(1))
+        
+        self.assertEqual(data["concept"], "comprehensive test")
+        self.assertEqual(len(data["categories"]), 2)
+        self.assertEqual(len(data["sources"]), 2)
+        # First source is "All"
+        self.assertEqual(data["sources"][0]["id"], "all")
+        # Second source is Dribbble with correct color
+        self.assertEqual(data["sources"][1]["color"], "#ea4c89")
+        self.assertEqual(data["allTags"], ["tag1", "tag2"])
+        self.assertEqual(data["tier"], 2)
     
     def test_includes_styling(self):
         gallery = schema.Gallery(concept="test")
@@ -69,179 +157,61 @@ class TestEscapeHtml(unittest.TestCase):
     def test_escapes_quotes(self):
         self.assertEqual(render.escape_html('"test"'), "&quot;test&quot;")
         self.assertEqual(render.escape_html("'test'"), "&#39;test&#39;")
+    
+    def test_handles_empty_string(self):
+        self.assertEqual(render.escape_html(""), "")
+    
+    def test_handles_no_special_chars(self):
+        self.assertEqual(render.escape_html("normal text"), "normal text")
 
 
-class TestGenerateStats(unittest.TestCase):
-    """Tests for generate_stats function."""
+class TestSaveGallery(unittest.TestCase):
+    """Tests for save_gallery function."""
     
-    def test_includes_total(self):
-        gallery = schema.Gallery(
-            concept="test",
-            refs=[
-                schema.Reference(url="1", title="1", description="", source="dribbble", category="a"),
-                schema.Reference(url="2", title="2", description="", source="dribbble", category="a")
-            ]
-        )
+    def test_creates_output_directory(self):
+        import tempfile
+        import shutil
         
-        stats = render.generate_stats(gallery)
-        
-        self.assertIn("Total: 2 references", stats)
+        tmpdir = tempfile.mkdtemp()
+        try:
+            output_path = Path(tmpdir) / "nested" / "dir" / "gallery.html"
+            
+            gallery = schema.Gallery(concept="test")
+            result = render.save_gallery(gallery, output_path)
+            
+            self.assertTrue(output_path.exists())
+            self.assertEqual(result, output_path)
+            
+            content = output_path.read_text()
+            self.assertIn("test", content)
+        finally:
+            shutil.rmtree(tmpdir)
     
-    def test_includes_source_breakdown(self):
-        gallery = schema.Gallery(
-            concept="test",
-            refs=[
-                schema.Reference(url="1", title="1", description="", source="dribbble", category="a"),
-                schema.Reference(url="2", title="2", description="", source="behance", category="a")
-            ]
-        )
+    def test_writes_valid_html(self):
+        import tempfile
+        import shutil
         
-        stats = render.generate_stats(gallery)
-        
-        self.assertIn("Sources:", stats)
-        self.assertIn("Dribbble: 1", stats)
-        self.assertIn("Behance: 1", stats)
-
-
-class TestRenderReferenceCard(unittest.TestCase):
-    """Tests for render_reference_card function."""
-    
-    def test_basic_card(self):
-        ref = schema.Reference(
-            url="https://example.com",
-            title="Test Title",
-            description="Test description",
-            source="dribbble",
-            source_label="Dribbble",
-            category="test"
-        )
-        
-        html = render.render_reference_card(ref)
-        
-        self.assertIn("Test Title", html)
-        self.assertIn("Test description", html)
-        self.assertIn("Dribbble", html)
-        self.assertIn("https://example.com", html)
-    
-    def test_with_primary_tag(self):
-        ref = schema.Reference(
-            url="https://example.com",
-            title="Test",
-            description="",
-            source="dribbble",
-            category="test",
-            primary_tag="Must Read"
-        )
-        
-        html = render.render_reference_card(ref)
-        
-        self.assertIn("Must Read", html)
-        self.assertIn("ref-tag", html)
-    
-    def test_with_image(self):
-        ref = schema.Reference(
-            url="https://example.com",
-            title="Test",
-            description="",
-            source="dribbble",
-            category="test",
-            image_url="https://example.com/image.jpg"
-        )
-        
-        html = render.render_reference_card(ref, show_image=True)
-        
-        self.assertIn("ref-image", html)
-        self.assertIn("https://example.com/image.jpg", html)
-    
-    def test_without_image_flag(self):
-        ref = schema.Reference(
-            url="https://example.com",
-            title="Test",
-            description="",
-            source="dribbble",
-            category="test",
-            image_url="https://example.com/image.jpg"
-        )
-        
-        html = render.render_reference_card(ref, show_image=False)
-        
-        self.assertNotIn("ref-image", html)
-
-
-class TestGetSourceColor(unittest.TestCase):
-    """Tests for get_source_color function."""
-    
-    def test_dribbble(self):
-        self.assertEqual(render.get_source_color("dribbble"), "#ea4c89")
-    
-    def test_behance(self):
-        self.assertEqual(render.get_source_color("behance"), "#1769ff")
-    
-    def test_unknown(self):
-        self.assertEqual(render.get_source_color("unknown"), "#666666")
-
-
-class TestRenderSidebar(unittest.TestCase):
-    """Tests for render_sidebar function."""
-    
-    def test_renders_categories(self):
-        gallery = schema.Gallery(
-            concept="test",
-            categories=[
-                schema.Category(id="kanban", label="Kanban", count=5),
-                schema.Category(id="timeline", label="Timeline", count=3)
-            ]
-        )
-        
-        html = render.render_sidebar(gallery)
-        
-        self.assertIn("Kanban", html)
-        self.assertIn("Timeline", html)
-        self.assertIn("5", html)
-        self.assertIn("3", html)
-
-
-class TestRenderSourceChips(unittest.TestCase):
-    """Tests for render_source_chips function."""
-    
-    def test_renders_sources(self):
-        gallery = schema.Gallery(
-            concept="test",
-            sources=[
-                schema.Source(id="dribbble", label="Dribbble", color="#ea4c89", count=10),
-                schema.Source(id="behance", label="Behance", color="#1769ff", count=5)
-            ]
-        )
-        
-        html = render.render_source_chips(gallery)
-        
-        self.assertIn("Dribbble", html)
-        self.assertIn("Behance", html)
-        self.assertIn("#ea4c89", html)
-
-
-class TestRenderTagChips(unittest.TestCase):
-    """Tests for render_tag_chips function."""
-    
-    def test_renders_tags(self):
-        tags = ["productivity", "SaaS", "dark-mode"]
-        
-        html = render.render_tag_chips(tags)
-        
-        self.assertIn("productivity", html)
-        self.assertIn("SaaS", html)
-        self.assertIn("dark-mode", html)
-    
-    def test_limits_to_15(self):
-        tags = [f"xtag-{i:02d}" for i in range(20)]
-        
-        html = render.render_tag_chips(tags)
-        
-        # Should have first 15 (xtag-00 through xtag-14) but not later ones
-        self.assertIn("xtag-00", html)
-        self.assertIn("xtag-14", html)
-        self.assertNotIn("xtag-15", html)
-        self.assertNotIn("xtag-19", html)
+        tmpdir = tempfile.mkdtemp()
+        try:
+            output_path = Path(tmpdir) / "gallery.html"
+            
+            gallery = schema.Gallery(
+                concept="test",
+                refs=[schema.Reference(
+                    url="https://example.com",
+                    title="Test",
+                    description="",
+                    source="dribbble",
+                    category="test"
+                )]
+            )
+            render.save_gallery(gallery, output_path)
+            
+            content = output_path.read_text()
+            self.assertIn("<!DOCTYPE html>", content)
+            self.assertIn("</html>", content)
+        finally:
+            shutil.rmtree(tmpdir)
 
 
 class TestGetDefaultOutputPath(unittest.TestCase):
@@ -253,10 +223,14 @@ class TestGetDefaultOutputPath(unittest.TestCase):
         self.assertTrue(str(path).endswith(".html"))
         self.assertIn("planning-mode-ui", str(path).lower())
     
+    def test_uses_uir_output_directory(self):
+        path = render.get_default_output_path("Test Concept")
+        
+        self.assertIn(".uir-output", str(path))
+    
     def test_sanitizes_special_chars(self):
         path = render.get_default_output_path("Test/With\\Special:Chars")
         
-        # Should not contain special characters
         filename = path.name
         self.assertNotIn("/", filename)
         self.assertNotIn("\\", filename)
@@ -266,8 +240,15 @@ class TestGetDefaultOutputPath(unittest.TestCase):
         long_name = "A" * 100
         path = render.get_default_output_path(long_name)
         
-        # Filename should be reasonable length
         self.assertLess(len(path.name), 70)
+    
+    def test_includes_date_in_filename(self):
+        from datetime import datetime
+        
+        path = render.get_default_output_path("test")
+        today = datetime.now().strftime("%Y-%m-%d")
+        
+        self.assertIn(today, path.name)
 
 
 if __name__ == "__main__":

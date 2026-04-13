@@ -13,6 +13,8 @@ from lib.filter import (
     score_url_quality,
     filter_references,
     classify_url,
+    debug_url,
+    debug_urls,
     INDIVIDUAL_PATTERNS,
     COLLECTION_PATTERNS,
 )
@@ -297,6 +299,48 @@ class TestEdgeCases(unittest.TestCase):
         url = "https://youtu.be/dQw4w9WgXcQ"
         result = classify_url(url)
         self.assertEqual(result["source_id"], "youtube")
+
+
+class TestDebugUrl(unittest.TestCase):
+    """Tests for debug_url function."""
+    
+    def test_individual_page_output(self):
+        url = "https://dribbble.com/shots/12345678"
+        output = debug_url(url)
+        self.assertIn("URL: https://dribbble.com/shots/12345678", output)
+        self.assertIn("Source: dribbble", output)
+        self.assertIn("1.0 (individual)", output)
+        self.assertIn("Pattern:", output)
+    
+    def test_collection_page_output(self):
+        url = "https://dribbble.com/search?q=kanban"
+        output = debug_url(url)
+        self.assertIn("0.0 (collection)", output)
+        self.assertIn("FILTERED", output)
+    
+    def test_unknown_page_output(self):
+        url = "https://example.com/some-design"
+        output = debug_url(url)
+        self.assertIn("0.5 (unknown)", output)
+
+
+class TestDebugUrls(unittest.TestCase):
+    """Tests for debug_urls function."""
+    
+    def test_summary_counts(self):
+        urls = [
+            "https://dribbble.com/shots/12345",  # individual
+            "https://dribbble.com/search?q=test",  # collection
+            "https://example.com/page",  # unknown
+        ]
+        output = debug_urls(urls)
+        self.assertIn("2 kept", output)
+        self.assertIn("1 filtered", output)
+    
+    def test_includes_header(self):
+        urls = ["https://dribbble.com/shots/12345"]
+        output = debug_urls(urls)
+        self.assertIn("DEBUG: URL Classification", output)
 
 
 if __name__ == "__main__":

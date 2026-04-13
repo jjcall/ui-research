@@ -1,11 +1,16 @@
 ---
 name: uir
-description: Research UI/UX patterns for any concept. Use when the user asks for 'ui research', 'design inspiration', 'moodboard', 'UI examples', or 'how do other apps handle X'. Decomposes concepts into searchable patterns, searches design sources (Dribbble, Behance, Mobbin, v0), extracts images, and generates a browsable HTML gallery.
+description: Research UI/UX patterns for any concept. Use when the user asks for 'ui research', 'design inspiration', 'moodboard', 'UI examples', or 'how do other apps handle X'. Decomposes concepts into searchable patterns, searches design sources (Dribbble, Behance, Mobbin, v0), and presents a scannable summary. User can then request a full HTML gallery.
 ---
 
 # UI Research Skill
 
-Research UI/UX patterns for any concept. Decomposes design concepts into searchable patterns, searches across design sources (Dribbble, Behance, Mobbin, v0, etc.), extracts images, and generates a browsable HTML gallery.
+Research UI/UX patterns for any concept. Uses a **two-phase flow**:
+
+1. **Phase 1 (default)**: Search, filter, and display a scannable summary in the terminal
+2. **Phase 2 (on demand)**: Build a browsable HTML gallery with images
+
+This lets you review results quickly before committing to the heavier gallery generation.
 
 ## Trigger Phrases
 
@@ -140,29 +145,181 @@ for pattern in sub_patterns:
 
 Append "2025 2026" to queries. Skip pre-2024 results unless iconic.
 
-## Step 4: Image Collection
+### Post-Search Filtering (CRITICAL)
 
-### Tier Detection
+**BEFORE proceeding to image collection**, filter out collection/search pages:
 
-Check available tools:
+1. For each URL from search results, classify it:
+   - **Individual pages** (quality 1.0): `/shots/12345`, `/gallery/123/`, `/explore/screens/uuid`
+   - **Collection pages** (quality 0.0): `/search?q=`, `/browse/`, `/tags/`, `/designers/`
+   - **Unknown** (quality 0.5): URLs that don't match known patterns
+
+2. **Remove all collection pages** (quality 0.0) — these redirect or show lists, not individual designs
+
+3. Log what was filtered:
+   ```
+   📋 URL Quality Check:
+      - 45 URLs collected
+      - 12 filtered as collection/search pages
+      - 33 individual pages kept
+   
+   Filtered examples:
+      ✗ dribbble.com/search?q=kanban (collection)
+      ✗ mobbin.com/browse/web/screens (collection)
+   ```
+
+4. **Only proceed with individual/unknown URLs** to Step 4
+
+### URL Pattern Reference
+
+| Source | Individual Pattern | Collection Patterns |
+|--------|-------------------|---------------------|
+| Dribbble | `/shots/\d+` | `/search?`, `/tags/`, `/designers` |
+| Behance | `/gallery/\d+/` | `/search/projects/`, `/galleries/` |
+| Mobbin | `/explore/screens/[uuid]` | `/browse/`, `/explore/web/screens`, `/explore/mobile/screens` |
+| Figma | `/community/file/\d+` | `/community/search`, `/community/explore` |
+| v0 | `/t/[id]`, `/chat/[id]` | `/chat$`, `/docs/` |
+
+## Step 4: Display Summary (Phase 1 — Default)
+
+After filtering, display a **scannable summary** in the terminal. Do NOT build the gallery yet.
+
+### Summary Format
+
 ```
-1. If Playwright available → Tier 0 (full screenshots)
-2. If WebFetch works → Tier 2 (OG images)
-3. Otherwise → Tier 1 (links only)
+📋 Found {N} references for "{CONCEPT}"
+
+{CATEGORY_1} ({count})
+  ★ {source}.com/... — {title} [img]
+  ★ {source}.com/... — {title} [img]
+  ○ {source}.com/... — {title}
+  ...
+
+{CATEGORY_2} ({count})
+  ★ {source}.com/... — {title} [img]
+  ...
+
+{CATEGORY_3} ({count})
+  ...
+
+───────────────────────────────────────
+{N} total • {M} high-quality (★) • {X} filtered as collections
+
+Say "build gallery" to generate the browsable HTML, or refine your search.
 ```
 
-### OG Image Extraction (Tier 2)
+### Symbol Legend
 
-For each URL, use WebFetch and extract:
+| Symbol | Meaning |
+|--------|---------|
+| ★ | Individual page (quality 1.0) — confirmed design reference |
+| ○ | Unknown quality (0.5) — may be useful |
+| [img] | Image likely available (known CDN pattern) |
+
+### Grouping Rules
+
+1. Group references by category (from decomposition)
+2. Within each category, show up to 5 references (highest quality first)
+3. Show abbreviated URLs: `dribbble.com/shots/123...` not full URL
+4. Truncate titles to ~50 chars
+
+### Example Output
+
+```
+📋 Found 34 references for "planning mode UI"
+
+Kanban Boards (12)
+  ★ dribbble.com/shots/25799561 — Kanban Dashboard Redesign [img]
+  ★ behance.net/gallery/198234567 — Task Board UI Kit [img]
+  ★ figma.com/community/file/1234 — Kanban Components [img]
+  ○ medium.com/design/kanban-patt... — Kanban UX Patterns
+  ○ uxdesign.cc/building-better... — Building Better Boards
+  ... +7 more
+
+Timeline Views (8)
+  ★ mobbin.com/explore/screens/abc — Linear Roadmap Screen [img]
+  ★ dribbble.com/shots/25612345 — Gantt Chart Redesign [img]
+  ○ figma.com/community/file/5678 — Timeline Kit
+  ... +5 more
+
+Calendar Interfaces (6)
+  ★ dribbble.com/shots/24987654 — Calendar Week View [img]
+  ★ behance.net/gallery/187654321 — Scheduling UI [img]
+  ... +4 more
+
+View Switchers (5)
+  ★ dribbble.com/shots/25111222 — Toggle Component [img]
+  ... +4 more
+
+AI Reasoning (3)
+  ○ v0.dev/t/abc123xyz — AI Thinking States
+  ... +2 more
+
+───────────────────────────────────────
+34 total • 24 high-quality (★) • 12 filtered as collections
+
+Say "build gallery" to generate the browsable HTML, or refine your search.
+```
+
+### Retain Context
+
+After displaying the summary, store in memory:
+```
+RESEARCH_STATE: {
+  concept: "{CONCEPT}",
+  refs: [...all references with metadata...],
+  categories: [...],
+  filtered_count: {N},
+  ready_for_gallery: true
+}
+```
+
+## Step 5: Build Gallery (Phase 2 — On Demand)
+
+**Only run this step when user says**: "build gallery", "generate it", "looks good", "create the HTML", etc.
+
+### Screenshot Capture with Playwright
+
+The skill uses **Playwright** for reliable screenshot capture. This handles:
+- Figma Community (bypasses 403 errors)
+- Mobbin (handles JS rendering + auth)
+- Any site that blocks WebFetch
+
+#### Setup (one-time)
+
+If Playwright isn't installed, run:
+```bash
+cd ~/Code/ui-research
+python scripts/ui_research.py --setup
+```
+
+This installs Playwright and Chromium (~150MB).
+
+#### Screenshot Process
+
+1. **Check cache** — Screenshots are cached in `~/.cache/ui-research/screenshots/`
+2. **Batch capture** — Capture up to 5 URLs in parallel
+3. **Fallback to OG images** — For URLs that fail screenshot capture
+
+```
+📸 Capturing screenshots...
+   [1/34] dribbble.com/shots/25799561 ✓
+   [2/34] figma.com/community/file/1234 ✓
+   [3/34] mobbin.com/explore/screens/abc ✓
+   ...
+   
+   Done: 30 captured, 4 failed (using placeholders)
+```
+
+#### Fallback: OG Image Extraction
+
+For URLs where Playwright fails, try WebFetch + OG tags:
 ```html
 <meta property="og:image" content="...">
 <meta name="twitter:image" content="...">
 ```
 
-### CDN Patterns
-
-Source-specific image extraction:
-
+#### CDN Patterns (for scoring)
 | Source | CDN Pattern |
 |--------|-------------|
 | Dribbble | `cdn.dribbble.com/userupload` |
@@ -171,78 +328,232 @@ Source-specific image extraction:
 | Mobbin | `mobbin.com/_next/image` |
 | v0.dev | Preview images in meta tags |
 
-## Step 5: Gallery Builder
+### Gallery Generation
 
-Generate a self-contained HTML gallery with:
+1. **Read template**: Load `data/gallery-template.html`
 
-### Structure
-```
+2. **Build data object**:
+   ```json
+   {
+     "concept": "planning mode UI",
+     "categories": [
+       { "id": "all", "label": "All", "count": 52 },
+       { "id": "kanban", "label": "Kanban Boards", "count": 15 }
+     ],
+     "sources": [
+       { "id": "dribbble", "label": "Dribbble", "color": "#ea4c89", "count": 12 }
+     ],
+     "refs": [
+       {
+         "url": "https://dribbble.com/shots/123",
+         "title": "Kanban Board Design",
+         "desc": "Clean task management UI",
+         "source": "dribbble",
+         "sourceLabel": "Dribbble",
+         "cat": "kanban",
+         "tags": ["kanban", "tasks"],
+         "img": "https://cdn.dribbble.com/...",
+         "urlQuality": 1.0,
+         "imageStatus": "available"
+       }
+     ],
+     "allTags": ["kanban", "timeline", "calendar"],
+     "tier": 2,
+     "generatedAt": "2024-04-12T10:30:00"
+   }
+   ```
+
+3. **Inject data** at the `/*GALLERY_DATA*/` marker
+
+4. **Write to** `.uir-output/{date}-{concept}.html`
+
+### Gallery Features
+
 - Sidebar: Category navigation
 - Header: Concept title + stats
 - Search bar: Cmd+K shortcut
 - Source chips: Filter by Dribbble, Mobbin, etc.
 - Tag chips: Filter by tags
-- Reference list: Clean, scannable items
-```
-
-### Features
-- URL state persistence (`#category=kanban&source=dribbble`)
-- Keyboard navigation (arrows, Esc, Cmd+K)
-- Image preview toggle
-- Responsive layout
+- Grid/List view toggle
+- Image previews (in list view)
+- Quality indicators
+- Keyboard navigation
+- URL state persistence
 
 ### Output
 
-Save gallery to `~/Documents/UIResearch/galleries/{date}-{concept}.html`
-
-Display completion:
 ```
-✅ Research complete!
+✅ Gallery built!
 
 📊 Results:
-   - {N} references collected
+   - {N} references
    - {M} with images
    - Sources: Dribbble ({X}), Mobbin ({Y}), ...
 
-📁 Gallery saved: ~/Documents/UIResearch/galleries/{filename}
+📁 Saved: .uir-output/{filename}
 
 🔗 Opening in browser...
 ```
 
 ## Step 6: Follow-Up Mode
 
-After delivering the gallery, retain context:
+After displaying the summary (Phase 1), retain context for follow-ups:
 
 ```
-CONCEPT: {what was researched}
-SUB_PATTERNS: {full decomposition}
-KEY_FINDINGS: {cross-pattern insights}
-ALL_REFS: {complete refs list}
-SOURCE_DATA: {which sites had richest results}
+RESEARCH_STATE: {
+  concept: "{CONCEPT}",
+  refs: [...all references...],
+  categories: [...],
+  decomposition: {...},
+  filtered_count: {N},
+  gallery_built: false
+}
 ```
 
 ### Follow-Up Behaviors
 
 | User says | Claude does |
 |-----------|-------------|
-| "Show me more kanban examples" | Run targeted searches, extend gallery |
-| "Which products handle view switching best?" | Answer from memory, cite refs |
-| "Now do the mobile version" | New research sprint with mobile queries |
-| "Compare Linear vs Asana" | Pull from refs + targeted searches |
+| "build gallery" / "generate it" / "looks good" | → Run Step 5 (gallery generation) |
+| "open in tabs" / "open all" | → Open all references in browser tabs |
+| "open kanban in tabs" | → Open only kanban category refs in tabs |
+| "open top 10 in tabs" | → Open first 10 refs in tabs |
+| "open dribbble in tabs" | → Open only Dribbble refs in tabs |
+| "more kanban examples" | Run targeted searches, add to refs, show updated summary |
+| "focus on dribbble only" | Filter refs to Dribbble, show filtered summary |
+| "remove the medium articles" | Filter out medium.com refs, show updated summary |
+| "now do mobile" | New research sprint with mobile queries |
+| "compare Linear vs Asana" | Pull from refs + targeted searches |
 
-### Follow-Up Invitation
+### Open in Tabs
 
-After delivering results:
+When user says "open in tabs", "open all", or similar:
+
+1. **Filter refs** based on any constraints (category, source, count)
+2. **Warn if many tabs** — if > 15 refs, confirm first:
+   ```
+   This will open 34 tabs. Continue? (say "yes" or specify a limit like "top 10")
+   ```
+3. **Open tabs** — use Shell to open URLs in default browser:
+   ```bash
+   open "https://dribbble.com/shots/123"
+   open "https://figma.com/community/file/456"
+   # ... etc
+   ```
+4. **Confirm**:
+   ```
+   ✓ Opened 15 tabs in your browser
+   ```
+
+#### Filtering Options
+
+| Command | Behavior |
+|---------|----------|
+| "open in tabs" | All refs (with confirmation if > 15) |
+| "open top 10" | First 10 refs (highest quality) |
+| "open top 5 kanban" | First 5 from kanban category |
+| "open dribbble in tabs" | All Dribbble refs |
+| "open ★ only" | Only quality 1.0 (individual pages) |
+
+### After Summary (Phase 1)
+
 ```
-I'm now deep in the research for {CONCEPT}. Some things I can help with:
+Say "build gallery" to generate the browsable HTML.
+Say "open in tabs" to open all references in your browser.
 
-- Go deeper on any pattern category (e.g., "more timeline examples")
-- Compare specific products ("how does Linear vs Notion handle planning?")
-- Explore the mobile version of these patterns
-- Research an adjacent concept that came up
-
-Just ask.
+Or refine:
+- "more {category} examples"
+- "focus on {source} only"  
+- "remove {source}"
+- "open top 10 in tabs"
 ```
+
+### After Gallery (Phase 2)
+
+```
+Gallery saved. I still have all {N} references in memory.
+
+- "add more examples" → extend and rebuild
+- "open in tabs" → open refs in browser
+- "new research for {concept}" → start fresh
+```
+
+## Debug Mode
+
+When troubleshooting research results (images not loading, wrong pages appearing), output diagnostic information:
+
+### URL Classification Debug
+
+After collecting search results, show classification for each URL:
+
+```
+DEBUG: URL Classification
+────────────────────────────────────────
+URL: https://dribbble.com/shots/12345678-kanban-board
+  Source: dribbble
+  Quality: 1.0 (individual)
+  Pattern: /shots/\d+
+
+URL: https://dribbble.com/search?q=kanban
+  Source: dribbble
+  Quality: 0.0 (collection) ← FILTERED
+  Pattern: /search?
+
+URL: https://mobbin.com/browse/web/screens
+  Source: mobbin
+  Quality: 0.0 (collection) ← FILTERED
+  Pattern: /browse/
+
+URL: https://medium.com/design/kanban-patterns
+  Source: unknown
+  Quality: 0.5 (unknown)
+  Pattern: none
+────────────────────────────────────────
+Summary: 28 kept, 17 filtered as collections
+```
+
+### Image Extraction Debug
+
+For URLs that pass filtering, show WebFetch results:
+
+```
+DEBUG: Image Extraction
+────────────────────────────────────────
+URL: https://dribbble.com/shots/12345678
+  Fetched: Yes
+  OG Image: https://cdn.dribbble.com/userupload/12345/original.png
+  Status: ✓ Image found
+
+URL: https://behance.net/gallery/123456/project
+  Fetched: Yes
+  OG Image: null
+  CDN Search: Found mir-s3-cdn-cf.behance.net/project_modules/...
+  Status: ✓ Image found via CDN
+
+URL: https://mobbin.com/explore/screens/abc-123
+  Fetched: No (blocked/timeout)
+  Fallback: Using source placeholder
+  Status: ✗ No image
+────────────────────────────────────────
+Summary: 24 with images, 9 without (using placeholders)
+```
+
+### When to Use Debug Mode
+
+Enable debug output when:
+- Gallery shows mostly placeholders instead of images
+- Clicking references leads to search/browse pages instead of individual designs
+- A source (e.g., Mobbin) consistently redirects to home page
+- Stats show "X with images" but images don't display
+
+### Common Issues
+
+| Symptom | Likely Cause | Fix |
+|---------|--------------|-----|
+| All placeholders | WebFetch not attempted or failing | Check if URLs are being fetched |
+| Search pages in results | Post-search filtering not applied | Ensure Step 3 filtering runs |
+| Mobbin redirects | Captured browse URLs, not screen URLs | Mobbin browse pages require auth; filter them out |
+| "X with images" but none show | `img` field has URL but it's broken | Check OG image URLs are valid |
 
 ## CLI Usage
 
@@ -270,12 +581,32 @@ python scripts/ui_research.py --open {id}
 
 ## Tier Reference
 
-| Tier | Environment | Image Source | Time |
-|------|-------------|--------------|------|
-| 0 | CLI + Playwright | Full screenshots | 5-8 min |
-| 1 | Cursor (restricted) | Links only | 3 min |
-| 2 | Cursor + WebFetch | OG images | 5 min |
-| 3 | Chrome extension | Live captures | 8-10 min |
+| Tier | Environment | Image Source | Time | Quality |
+|------|-------------|--------------|------|---------|
+| 0 | **Playwright (recommended)** | Full screenshots | 3-5 min | ★★★★★ |
+| 1 | CLI (no screenshots) | Links only | 1 min | ★☆☆☆☆ |
+| 2 | WebFetch | OG images | 3 min | ★★★☆☆ |
+
+### Why Playwright?
+
+Playwright provides:
+- **Figma Community** — WebFetch gets 403, Playwright renders the page
+- **Mobbin** — Requires JS rendering and auth cookies
+- **Consistent quality** — Same viewport, same screenshot format
+- **Caching** — Screenshots cached locally, instant on re-runs
+- **Parallel capture** — 5 pages at once, fast batch processing
+
+### Setup
+
+```bash
+python scripts/ui_research.py --setup
+```
+
+### Test a URL
+
+```bash
+python scripts/ui_research.py --screenshot "https://figma.com/community/file/123456"
+```
 
 ## Data Files
 

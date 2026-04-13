@@ -7,6 +7,7 @@ Usage:
     python ui_research.py --mock "kanban board"
     python ui_research.py --history
     python ui_research.py --rerun abc123
+    python ui_research.py --setup          # Install Playwright
 """
 
 import argparse
@@ -24,6 +25,13 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).parent))
 
 from lib import schema, decompose, search, images, render
+from lib.screenshots import (
+    is_playwright_available,
+    capture_screenshots_sync,
+    get_cache_stats,
+    clear_cache,
+    HAS_PLAYWRIGHT
+)
 
 
 def get_research_dir() -> Path:
@@ -41,18 +49,7 @@ def diagnose_environment() -> dict:
     env = schema.EnvironmentInfo()
     
     # Check for Playwright
-    try:
-        import playwright
-        env.playwright_available = True
-    except ImportError:
-        try:
-            result = subprocess.run(
-                ["playwright", "--version"],
-                capture_output=True, timeout=5
-            )
-            env.playwright_available = result.returncode == 0
-        except Exception:
-            env.playwright_available = False
+    env.playwright_available = HAS_PLAYWRIGHT and is_playwright_available()
     
     # Determine tier
     if env.playwright_available:
@@ -60,13 +57,57 @@ def diagnose_environment() -> dict:
     else:
         env.detected_tier = 1  # CLI without screenshots
     
+    # Get cache stats
+    cache_stats = get_cache_stats() if HAS_PLAYWRIGHT else {}
+    
     return {
         **env.to_dict(),
         "pythonVersion": sys.version,
         "platform": sys.platform,
         "researchDir": str(get_research_dir()),
-        "hasHistory": get_history_path().exists()
+        "hasHistory": get_history_path().exists(),
+        "playwrightInstalled": HAS_PLAYWRIGHT,
+        "screenshotCache": cache_stats
     }
+
+
+def setup_playwright() -> int:
+    """Install Playwright and browsers."""
+    print("Setting up Playwright for screenshots...\n")
+    
+    # Check if playwright package is installed
+    try:
+        import playwright
+        print("✓ playwright package already installed")
+    except ImportError:
+        print("Installing playwright package...")
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "playwright"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            print(f"✗ Failed to install playwright: {result.stderr}")
+            return 1
+        print("✓ playwright package installed")
+    
+    # Install browsers
+    print("\nInstalling Chromium browser...")
+    result = subprocess.run(
+        [sys.executable, "-m", "playwright", "install", "chromium"],
+        capture_output=False  # Show progress
+    )
+    if result.returncode != 0:
+        print("✗ Failed to install Chromium")
+        return 1
+    
+    print("\n✓ Playwright setup complete!")
+    print("\nYou can now capture full screenshots from:")
+    print("  - Figma Community (bypasses 403)")
+    print("  - Mobbin (handles JS rendering)")
+    print("  - Any auth-walled or JS-rendered site")
+    
+    return 0
 
 
 def load_history() -> list[dict]:
@@ -157,6 +198,32 @@ def open_gallery(research_id: str):
     webbrowser.open(f"file://{gallery_path}")
 
 
+def open_urls_in_tabs(urls: list[str], delay_ms: int = 100) -> int:
+    """
+    Open multiple URLs in browser tabs.
+    
+    Args:
+        urls: List of URLs to open
+        delay_ms: Delay between opening tabs (prevents browser overwhelm)
+    
+    Returns:
+        Number of tabs opened
+    """
+    import time
+    
+    opened = 0
+    for url in urls:
+        try:
+            webbrowser.open_new_tab(url)
+            opened += 1
+            if delay_ms > 0 and opened < len(urls):
+                time.sleep(delay_ms / 1000)
+        except Exception as e:
+            print(f"  Failed to open: {url} ({e})")
+    
+    return opened
+
+
 def run_mock_research(concept: str) -> schema.Gallery:
     """Run research with mock data (no network calls)."""
     # Load mock data if available
@@ -244,6 +311,10 @@ Examples:
   %(prog)s --history                 Show research history
   %(prog)s --rerun abc123            Re-run previous research
   %(prog)s --open abc123             Open previous gallery
+  %(prog)s --open-tabs abc123        Open refs in browser tabs
+  %(prog)s --open-tabs abc --limit 10  Open first 10 refs only
+  %(prog)s --setup                   Install Playwright for screenshots
+  %(prog)s --screenshot URL          Test screenshot capture
 """
     )
     
@@ -301,6 +372,37 @@ Examples:
         help="Don't open the gallery after generation"
     )
     
+    parser.add_argument(
+        "--setup",
+        action="store_true",
+        help="Install Playwright and browsers for screenshot capture"
+    )
+    
+    parser.add_argument(
+        "--clear-cache",
+        action="store_true",
+        help="Clear the screenshot cache"
+    )
+    
+    parser.add_argument(
+        "--screenshot",
+        metavar="URL",
+        help="Test screenshot capture for a single URL"
+    )
+    
+    parser.add_argument(
+        "--open-tabs",
+        metavar="ID",
+        help="Open all references from a previous research in browser tabs"
+    )
+    
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=20,
+        help="Limit number of tabs to open (default: 20)"
+    )
+    
     args = parser.parse_args()
     
     # Handle --diagnose
@@ -308,9 +410,105 @@ Examples:
         print(json.dumps(diagnose_environment(), indent=2))
         return 0
     
+    # Handle --setup
+    if args.setup:
+        return setup_playwright()
+    
+    # Handle --clear-cache
+    if args.clear_cache:
+        count = clear_cache()
+        print(f"Cleared {count} cached screenshots")
+        return 0
+    
+    # Handle --screenshot (test single URL)
+    if args.screenshot:
+        if not HAS_PLAYWRIGHT:
+            print("Playwright not installed. Run: python ui_research.py --setup")
+            return 1
+        
+        print(f"Capturing screenshot: {args.screenshot}")
+        
+        def progress(done, total, url):
+            print(f"  Progress: {done}/{total}")
+        
+        results = capture_screenshots_sync(
+            [args.screenshot],
+            use_cache=False,
+            progress_callback=progress
+        )
+        
+        if results.get(args.screenshot):
+            # Save to temp file and open
+            import tempfile
+            import base64
+            
+            data = results[args.screenshot]
+            # Remove data URL prefix
+            b64_data = data.split(",")[1]
+            img_bytes = base64.b64decode(b64_data)
+            
+            temp_path = Path(tempfile.gettempdir()) / "uir-screenshot.png"
+            with open(temp_path, "wb") as f:
+                f.write(img_bytes)
+            
+            print(f"✓ Screenshot saved: {temp_path}")
+            webbrowser.open(f"file://{temp_path}")
+        else:
+            print("✗ Screenshot capture failed")
+            return 1
+        
+        return 0
+    
     # Handle --history
     if args.history:
         print_history()
+        return 0
+    
+    # Handle --open-tabs
+    if args.open_tabs:
+        research = find_research_by_id(args.open_tabs)
+        if not research:
+            print(f"Research '{args.open_tabs}' not found in history.")
+            return 1
+        
+        gallery_path = Path(research["galleryPath"])
+        if not gallery_path.exists():
+            print(f"Gallery file not found: {gallery_path}")
+            return 1
+        
+        # Load gallery and extract URLs
+        with open(gallery_path, "r") as f:
+            html = f.read()
+        
+        # Extract URLs from the gallery data
+        import re
+        data_match = re.search(r'/\*GALLERY_DATA\*/(.+?)/\*END_GALLERY_DATA\*/', html, re.DOTALL)
+        if not data_match:
+            print("Could not parse gallery data")
+            return 1
+        
+        try:
+            gallery_data = json.loads(data_match.group(1))
+            urls = [ref["url"] for ref in gallery_data.get("refs", [])]
+        except json.JSONDecodeError:
+            print("Could not parse gallery JSON")
+            return 1
+        
+        if not urls:
+            print("No references found in gallery")
+            return 1
+        
+        # Apply limit
+        limit = min(args.limit, len(urls))
+        urls_to_open = urls[:limit]
+        
+        if len(urls) > limit:
+            print(f"Opening {limit} of {len(urls)} references (use --limit to change)")
+        else:
+            print(f"Opening {len(urls_to_open)} references...")
+        
+        opened = open_urls_in_tabs(urls_to_open)
+        print(f"✓ Opened {opened} tabs")
         return 0
     
     # Handle --open

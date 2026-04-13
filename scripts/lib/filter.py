@@ -284,3 +284,58 @@ def classify_url(url: str) -> dict:
         result["quality"] = 0.5
     
     return result
+
+
+def debug_url(url: str) -> str:
+    """
+    Return human-readable debug info about a URL's classification.
+    
+    Use this to troubleshoot why URLs are being filtered or kept.
+    """
+    info = classify_url(url)
+    
+    # Determine quality label
+    if info["quality"] == 1.0:
+        quality_label = "1.0 (individual)"
+    elif info["quality"] == 0.0:
+        quality_label = "0.0 (collection) ← FILTERED"
+    else:
+        quality_label = "0.5 (unknown)"
+    
+    lines = [
+        f"URL: {url}",
+        f"  Source: {info['source_id'] or 'unknown'}",
+        f"  Quality: {quality_label}",
+    ]
+    
+    if info["matched_pattern"]:
+        lines.append(f"  Pattern: {info['matched_pattern']}")
+    
+    return "\n".join(lines)
+
+
+def debug_urls(urls: list[str]) -> str:
+    """
+    Return debug info for multiple URLs.
+    
+    Summarizes how many would be kept vs filtered.
+    """
+    lines = ["DEBUG: URL Classification", "─" * 40]
+    
+    kept = 0
+    filtered = 0
+    
+    for url in urls:
+        info = classify_url(url)
+        lines.append(debug_url(url))
+        lines.append("")
+        
+        if info["quality"] == 0.0:
+            filtered += 1
+        else:
+            kept += 1
+    
+    lines.append("─" * 40)
+    lines.append(f"Summary: {kept} kept, {filtered} filtered as collections")
+    
+    return "\n".join(lines)
