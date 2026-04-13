@@ -1,8 +1,8 @@
 ---
-name: ui-research
+name: uir
 version: "1.0.0"
-description: "Research UI/UX patterns for any concept. Triggers: 'ui research for X', 'design inspiration for X', 'how do other apps handle X'. Decomposes concepts, searches design sources, generates visual gallery."
-argument-hint: 'ui research for planning mode, design inspiration for kanban boards'
+description: "Research UI/UX patterns for any concept. Also invoked as 'ui research'. Triggers: 'uir kanban board', 'ui research for X', 'design inspiration for X', 'how do other apps handle X'. Decomposes concepts, searches design sources, generates visual gallery."
+argument-hint: 'uir planning mode, uir kanban boards, ui research for checkout flow'
 allowed-tools: Bash, Read, Write, WebSearch, WebFetch
 user-invocable: true
 metadata:
