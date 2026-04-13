@@ -3,10 +3,10 @@
   "description": "UI/UX research tools by Jason Calleiro",
   "plugins": [
     {
-      "name": "uir",
+      "name": "design-research",
       "version": "1.0.0",
       "description": "Research UI/UX patterns for any concept. Decomposes concepts, searches design sources (Dribbble, Behance, Mobbin, v0), extracts images, and generates browsable HTML galleries.",
-      "repository": "https://github.com/jjcall/ui-research",
+      "repository": "https://github.com/jjcall/design-research",
       "keywords": [
         "design",
         "ui",

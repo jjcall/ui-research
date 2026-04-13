@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat Interfaces — UI Research</title>
+    <title>AI Chat Interfaces — Design Research</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -762,7 +762,7 @@
     <div class="app">
         <nav class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-brand">UI Research</div>
+                <div class="sidebar-brand">Design Research</div>
                 <div class="sidebar-concept" id="sidebar-concept">Loading...</div>
             </div>
             <div class="sidebar-section">
@@ -779,7 +779,7 @@
         </nav>
         <main class="main">
             <header class="header">
-                <h1 id="concept-title">UI Research</h1>
+                <h1 id="concept-title">Design Research</h1>
                 <div class="stats" id="stats"></div>
             </header>
             <div class="search-bar">
@@ -1823,8 +1823,8 @@
                 `;
                 return;
             }
-            document.getElementById('concept-title').textContent = data.concept || 'UI Research';
-            document.getElementById('sidebar-concept').textContent = data.concept || 'UI Research';
+            document.getElementById('concept-title').textContent = data.concept || 'Design Research';
+            document.getElementById('sidebar-concept').textContent = data.concept || 'Design Research';
             document.getElementById('stats').innerHTML = generateStats();
             parseHash();
             render();

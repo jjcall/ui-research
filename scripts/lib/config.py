@@ -1,9 +1,9 @@
-"""Configuration management for UI Research.
+"""Configuration management for Design Research.
 
 Loads API keys and settings from multiple sources:
 1. Environment variables (highest priority)
-2. Per-project config (.claude/ui-research.env)
-3. Global config (~/.config/ui-research/.env)
+2. Per-project config (.claude/design-research.env)
+3. Global config (~/.config/design-research/.env)
 
 Supports Codex auth as fallback for OpenAI API access.
 """
@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any, Literal
 
 # Config locations
-CONFIG_DIR = Path.home() / ".config" / "ui-research"
+CONFIG_DIR = Path.home() / ".config" / "design-research"
 CONFIG_FILE = CONFIG_DIR / ".env"
 CODEX_AUTH_FILE = Path(os.environ.get("CODEX_AUTH_FILE", str(Path.home() / ".codex" / "auth.json")))
 
@@ -36,7 +36,7 @@ class OpenAIAuth:
 
 def _log(msg: str):
     """Log to stderr."""
-    sys.stderr.write(f"[UIR Config] {msg}\n")
+    sys.stderr.write(f"[Design Research Config] {msg}\n")
     sys.stderr.flush()
 
 
@@ -149,7 +149,7 @@ def _find_project_env() -> Optional[Path]:
     """Find per-project .env by walking up from cwd."""
     cwd = Path.cwd()
     for parent in [cwd, *cwd.parents]:
-        candidate = parent / '.claude' / 'ui-research.env'
+        candidate = parent / '.claude' / 'design-research.env'
         if candidate.exists():
             return candidate
         if parent == Path.home() or parent == parent.parent:
@@ -162,8 +162,8 @@ def get_config() -> Dict[str, Any]:
     
     Priority (highest wins):
       1. Environment variables (os.environ)
-      2. .claude/ui-research.env (per-project config)
-      3. ~/.config/ui-research/.env (global config)
+      2. .claude/design-research.env (per-project config)
+      3. ~/.config/design-research/.env (global config)
     """
     # Load from global config file
     file_env = load_env_file(CONFIG_FILE) if CONFIG_FILE.exists() else {}
@@ -253,7 +253,7 @@ def setup_config(scrapecreators_key: Optional[str] = None, openai_key: Optional[
     
     # Write config
     with open(CONFIG_FILE, 'w') as f:
-        f.write("# UI Research configuration\n")
+        f.write("# Design Research configuration\n")
         f.write("# Get a ScrapeCreators key at https://scrapecreators.com (100 free credits)\n\n")
         for key, value in existing.items():
             f.write(f"{key}={value}\n")
@@ -298,4 +298,4 @@ def print_config_status():
     
     print()
     print(f"Global config: {CONFIG_FILE}")
-    print(f"Project config: .claude/ui-research.env")
+    print(f"Project config: .claude/design-research.env")

@@ -1,4 +1,4 @@
-"""Data models for UI Research plugin."""
+"""Data models for Design Research plugin."""
 
 from dataclasses import dataclass, field, asdict
 from typing import Optional

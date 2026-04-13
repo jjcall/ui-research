@@ -223,10 +223,10 @@ class TestGetDefaultOutputPath(unittest.TestCase):
         self.assertTrue(str(path).endswith(".html"))
         self.assertIn("planning-mode-ui", str(path).lower())
     
-    def test_uses_uir_output_directory(self):
+    def test_uses_design_research_output_directory(self):
         path = render.get_default_output_path("Test Concept")
         
-        self.assertIn(".uir-output", str(path))
+        self.assertIn(".design-research-output", str(path))
     
     def test_sanitizes_special_chars(self):
         path = render.get_default_output_path("Test/With\\Special:Chars")

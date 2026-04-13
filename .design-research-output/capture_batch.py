@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Batch capture OG images and screenshots for UI research gallery."""
+"""Batch capture OG images and screenshots for design research gallery."""
 import asyncio
 import json
 import hashlib
@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from urllib.parse import urlparse
 
-CACHE_DIR = Path.home() / ".cache" / "ui-research" / "screenshots"
+CACHE_DIR = Path.home() / ".cache" / "design-research" / "screenshots"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 URLS = [

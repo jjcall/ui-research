@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""UI Research CLI — Generate design reference galleries.
+"""Design Research CLI — Generate design reference galleries.
 
 Usage:
-    python ui_research.py "planning mode UI"
-    python ui_research.py --diagnose
-    python ui_research.py --mock "kanban board"
-    python ui_research.py --history
-    python ui_research.py --rerun abc123
-    python ui_research.py --setup          # Install Playwright
-    python ui_research.py --config         # Show/set configuration
+    python design_research.py "planning mode UI"
+    python design_research.py --diagnose
+    python design_research.py --mock "kanban board"
+    python design_research.py --history
+    python design_research.py --rerun abc123
+    python design_research.py --setup          # Install Playwright
+    python design_research.py --config         # Show/set configuration
 """
 
 import argparse
@@ -170,7 +170,7 @@ def print_history():
         print(f"History will be saved to: {get_history_path()}")
         return
     
-    print(f"\nUI Research History ({len(history)} entries)\n")
+    print(f"\nDesign Research History ({len(history)} entries)\n")
     print(f"{'ID':<10} {'Date':<12} {'Refs':<6} {'Concept':<40}")
     print("-" * 70)
     
@@ -503,7 +503,7 @@ Configuration:
     # Handle --screenshot (test single URL)
     if args.screenshot:
         if not HAS_PLAYWRIGHT:
-            print("Playwright not installed. Run: python ui_research.py --setup")
+            print("Playwright not installed. Run: python design_research.py --setup")
             return 1
         
         print(f"Capturing screenshot: {args.screenshot}")
@@ -527,7 +527,7 @@ Configuration:
             b64_data = data.split(",")[1]
             img_bytes = base64.b64decode(b64_data)
             
-            temp_path = Path(tempfile.gettempdir()) / "uir-screenshot.png"
+            temp_path = Path(tempfile.gettempdir()) / "design-research-screenshot.png"
             with open(temp_path, "wb") as f:
                 f.write(img_bytes)
             

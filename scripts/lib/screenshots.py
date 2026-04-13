@@ -50,7 +50,7 @@ def is_playwright_available() -> bool:
 
 def get_cache_dir() -> Path:
     """Get the screenshot cache directory."""
-    cache_dir = Path.home() / ".cache" / "ui-research" / "screenshots"
+    cache_dir = Path.home() / ".cache" / "design-research" / "screenshots"
     cache_dir.mkdir(parents=True, exist_ok=True)
     return cache_dir
 

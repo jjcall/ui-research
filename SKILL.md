@@ -1,9 +1,9 @@
 ---
-name: uir
+name: design-research
 description: Research UI/UX patterns for any concept. Use when the user asks for 'ui research', 'design inspiration', 'moodboard', 'UI examples', or 'how do other apps handle X'. Decomposes concepts into searchable patterns, searches design sources (Dribbble, Behance, Mobbin, v0), and presents a scannable summary. User can then request a full HTML gallery.
 ---
 
-# UI Research Skill
+# Design Research Skill
 
 Research UI/UX patterns for any concept. Uses a **two-phase flow**:
 
@@ -162,11 +162,11 @@ for pattern in sub_patterns:
 By default, prioritize recent content (last 30 days). Can be adjusted:
 
 ```
-/uir planning mode UI              # Default: last 30 days
-/uir planning mode UI --days=7     # Last week only
-/uir planning mode UI --days=90    # Last quarter
-/uir planning mode UI --quick      # Fewer sources, faster
-/uir planning mode UI --deep       # More sources, comprehensive
+/design-research planning mode UI              # Default: last 30 days
+/design-research planning mode UI --days=7     # Last week only
+/design-research planning mode UI --days=90    # Last quarter
+/design-research planning mode UI --quick      # Fewer sources, faster
+/design-research planning mode UI --deep       # More sources, comprehensive
 ```
 
 For design galleries (Dribbble, Behance), append current year to queries.
@@ -343,15 +343,15 @@ The skill uses **Playwright** for reliable screenshot capture. This handles:
 
 If Playwright isn't installed, run:
 ```bash
-cd ~/Code/ui-research
-python scripts/ui_research.py --setup
+cd ~/Code/design-research
+python scripts/design_research.py --setup
 ```
 
 This installs Playwright and Chromium (~150MB).
 
 #### Screenshot Process
 
-1. **Check cache** — Screenshots are cached in `~/.cache/ui-research/screenshots/`
+1. **Check cache** — Screenshots are cached in `~/.cache/design-research/screenshots/`
 2. **Batch capture** — Capture up to 5 URLs in parallel
 3. **Fallback to OG images** — For URLs that fail screenshot capture
 
@@ -419,7 +419,7 @@ For URLs where Playwright fails, try WebFetch + OG tags:
 
 3. **Inject data** at the `/*GALLERY_DATA*/` marker
 
-4. **Write to** `.uir-output/{date}-{concept}.html`
+4. **Write to** `.design-research-output/{date}-{concept}.html`
 
 ### Gallery Features
 
@@ -444,7 +444,7 @@ For URLs where Playwright fails, try WebFetch + OG tags:
    - {M} with images
    - Sources: Dribbble ({X}), Mobbin ({Y}), ...
 
-📁 Saved: .uir-output/{filename}
+📁 Saved: .design-research-output/{filename}
 
 🔗 Opening in browser...
 ```
@@ -615,22 +615,22 @@ The plugin includes a CLI for direct use:
 
 ```bash
 # Research a concept
-python scripts/ui_research.py "planning mode UI"
+python scripts/design_research.py "planning mode UI"
 
 # Check environment (tier detection)
-python scripts/ui_research.py --diagnose
+python scripts/design_research.py --diagnose
 
 # Use mock data for testing
-python scripts/ui_research.py --mock "kanban board" --no-open
+python scripts/design_research.py --mock "kanban board" --no-open
 
 # View research history
-python scripts/ui_research.py --history
+python scripts/design_research.py --history
 
 # Re-run previous research
-python scripts/ui_research.py --rerun {id}
+python scripts/design_research.py --rerun {id}
 
 # Open previous gallery
-python scripts/ui_research.py --open {id}
+python scripts/design_research.py --open {id}
 ```
 
 ## Tier Reference
@@ -653,13 +653,13 @@ Playwright provides:
 ### Setup
 
 ```bash
-python scripts/ui_research.py --setup
+python scripts/design_research.py --setup
 ```
 
 ### Test a URL
 
 ```bash
-python scripts/ui_research.py --screenshot "https://figma.com/community/file/123456"
+python scripts/design_research.py --screenshot "https://figma.com/community/file/123456"
 ```
 
 ## Data Files

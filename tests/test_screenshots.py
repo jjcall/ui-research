@@ -28,9 +28,9 @@ class TestCacheDir(unittest.TestCase):
         cache_dir = get_cache_dir()
         self.assertTrue(str(cache_dir).startswith(str(Path.home())))
     
-    def test_cache_dir_contains_ui_research(self):
+    def test_cache_dir_contains_design_research(self):
         cache_dir = get_cache_dir()
-        self.assertIn("ui-research", str(cache_dir))
+        self.assertIn("design-research", str(cache_dir))
 
 
 class TestCachePath(unittest.TestCase):

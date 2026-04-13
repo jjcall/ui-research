@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Playwright screenshot capture script for UI Research.
+"""Playwright screenshot capture script for Design Research.
 
 This script captures full-page screenshots of design reference URLs
 using Playwright's headless Chromium browser.

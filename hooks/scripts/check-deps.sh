@@ -1,8 +1,8 @@
 #!/bin/bash
-# Check dependencies for UI Research plugin
+# Check dependencies for Design Research plugin
 # Note: No required dependencies - all core functionality uses Python standard library
 
-echo "UI Research Plugin — Dependency Check"
+echo "Design Research Plugin — Dependency Check"
 echo ""
 
 # Check Python

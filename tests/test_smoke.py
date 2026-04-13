@@ -1,4 +1,4 @@
-"""Smoke tests for UI Research CLI."""
+"""Smoke tests for Design Research CLI."""
 
 import sys
 import json
@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-SCRIPT = Path(__file__).parent.parent / "scripts" / "ui_research.py"
+SCRIPT = Path(__file__).parent.parent / "scripts" / "design_research.py"
 
 
 def _run(args, timeout=30):

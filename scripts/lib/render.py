@@ -77,7 +77,7 @@ def get_default_output_path(concept: str) -> Path:
     """
     Get the default output path for a gallery.
     
-    Outputs to .uir-output/ in the current working directory.
+    Outputs to .design-research-output/ in the current working directory.
     """
     # Sanitize concept for filename
     safe_name = "".join(c if c.isalnum() or c in " -_" else "" for c in concept)
@@ -86,5 +86,5 @@ def get_default_output_path(concept: str) -> Path:
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"{date_str}-{safe_name}.html"
     
-    output_dir = Path.cwd() / ".uir-output"
+    output_dir = Path.cwd() / ".design-research-output"
     return output_dir / filename

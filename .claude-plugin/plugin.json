@@ -1,13 +1,13 @@
 {
-  "name": "uir",
+  "name": "design-research",
   "version": "1.0.0",
   "description": "Research UI/UX patterns for any concept. Decomposes concepts into searchable patterns, searches design sources (Dribbble, Behance, Mobbin, v0, etc.), extracts images, and generates a browsable HTML gallery.",
   "author": {
     "name": "Jason Calleiro",
     "url": "https://github.com/jjcall"
   },
-  "homepage": "https://github.com/jjcall/ui-research",
-  "repository": "https://github.com/jjcall/ui-research",
+  "homepage": "https://github.com/jjcall/design-research",
+  "repository": "https://github.com/jjcall/design-research",
   "license": "MIT",
   "keywords": [
     "design",
