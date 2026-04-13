@@ -1,0 +1,58 @@
+{
+  "concept": "planning mode UI",
+  "queries_run": 18,
+  "results": [
+    {
+      "query": "site:dribbble.com kanban UI 2025 2026",
+      "results": [
+        {
+          "url": "https://dribbble.com/shots/mock-kanban-1",
+          "title": "Linear-style Kanban Board",
+          "description": "Clean kanban design with status columns and drag handles",
+          "source": "dribbble"
+        },
+        {
+          "url": "https://dribbble.com/shots/mock-kanban-2",
+          "title": "Project Management Dashboard",
+          "description": "Full project management UI with kanban view",
+          "source": "dribbble"
+        }
+      ]
+    },
+    {
+      "query": "site:mobbin.com timeline",
+      "results": [
+        {
+          "url": "https://mobbin.com/apps/linear/screens/timeline",
+          "title": "Linear Timeline View",
+          "description": "Production timeline implementation from Linear app",
+          "source": "mobbin"
+        }
+      ]
+    },
+    {
+      "query": "site:v0.dev calendar",
+      "results": [
+        {
+          "url": "https://v0.dev/t/calendar-component",
+          "title": "Calendar Component",
+          "description": "React calendar with event support",
+          "source": "v0",
+          "hasCode": true
+        }
+      ]
+    },
+    {
+      "query": "Linear board view UI",
+      "results": [
+        {
+          "url": "https://linear.app/features/issues",
+          "title": "Linear Issues View",
+          "description": "Official Linear board interface",
+          "source": "product"
+        }
+      ]
+    }
+  ],
+  "total_refs": 5
+}

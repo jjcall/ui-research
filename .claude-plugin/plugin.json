@@ -1,0 +1,33 @@
+{
+  "name": "ui-research",
+  "version": "1.0.0",
+  "description": "Research UI/UX patterns for any concept. Decomposes concepts into searchable patterns, searches design sources (Dribbble, Behance, Mobbin, v0, etc.), extracts images, and generates a browsable HTML gallery.",
+  "author": {
+    "name": "Jason Calleiro",
+    "url": "https://github.com/jcalleiro"
+  },
+  "homepage": "https://github.com/jcalleiro/ui-research",
+  "repository": "https://github.com/jcalleiro/ui-research",
+  "license": "MIT",
+  "keywords": [
+    "design",
+    "ui",
+    "ux",
+    "research",
+    "moodboard",
+    "inspiration",
+    "dribbble",
+    "behance",
+    "mobbin",
+    "gallery"
+  ],
+  "skills": ["./"],
+  "hooks": {
+    "SessionStart": "hooks/scripts/check-deps.sh"
+  },
+  "files": [
+    "scripts/**",
+    "data/**",
+    "hooks/**"
+  ]
+}

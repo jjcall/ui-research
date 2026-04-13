@@ -1,0 +1,36 @@
+[
+  {
+    "url": "https://dribbble.com/shots/sample-1",
+    "title": "Linear Project Board",
+    "desc": "Clean kanban with drag handles and status columns",
+    "source": "dribbble",
+    "sourceLabel": "Dribbble",
+    "cat": "kanban",
+    "tag": "Key Reference",
+    "tags": ["productivity", "SaaS", "dark-mode"],
+    "img": "https://cdn.dribbble.com/userupload/sample.png",
+    "hasCode": false
+  },
+  {
+    "url": "https://mobbin.com/apps/linear",
+    "title": "Linear Mobile App",
+    "desc": "Mobile implementation of kanban board",
+    "source": "mobbin",
+    "sourceLabel": "Mobbin",
+    "cat": "kanban",
+    "tags": ["mobile", "productivity"],
+    "img": null,
+    "hasCode": false
+  },
+  {
+    "url": "https://v0.dev/t/sample-timeline",
+    "title": "Timeline Component",
+    "desc": "React timeline component with drag-and-drop",
+    "source": "v0",
+    "sourceLabel": "v0",
+    "cat": "timeline",
+    "tags": ["productivity", "with-code"],
+    "img": "https://v0.dev/preview/sample.png",
+    "hasCode": true
+  }
+]

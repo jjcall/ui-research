@@ -1,0 +1,270 @@
+{
+  "version": "1.0.0",
+  "description": "Design source metadata for search and gallery rendering",
+  "sources": {
+    "dribbble": {
+      "id": "dribbble",
+      "label": "Dribbble",
+      "color": "#ea4c89",
+      "queryTemplate": "site:dribbble.com {terms} UI",
+      "ogImagePattern": "cdn.dribbble.com",
+      "cdnPatterns": ["cdn.dribbble.com/userupload", "cdn.dribbble.com/users"],
+      "category": "gallery",
+      "priority": 2,
+      "description": "High-polish visual shots, concept art"
+    },
+    "behance": {
+      "id": "behance",
+      "label": "Behance",
+      "color": "#1769ff",
+      "queryTemplate": "site:behance.net {terms} UI UX case study",
+      "ogImagePattern": "behance.net",
+      "cdnPatterns": ["mir-s3-cdn-cf.behance.net", "mir-cdn.behance.net"],
+      "category": "gallery",
+      "priority": 2,
+      "description": "Deep design process docs, full projects"
+    },
+    "figma": {
+      "id": "figma",
+      "label": "Figma Community",
+      "color": "#f24e1e",
+      "queryTemplate": "site:figma.com/community {terms}",
+      "ogImagePattern": "figma.com",
+      "cdnPatterns": ["figma.com/community/thumbnail"],
+      "category": "gallery",
+      "priority": 2,
+      "description": "Editable design files, component kits"
+    },
+    "mobbin": {
+      "id": "mobbin",
+      "label": "Mobbin",
+      "color": "#000000",
+      "queryTemplate": "site:mobbin.com {terms}",
+      "ogImagePattern": "mobbin.com",
+      "cdnPatterns": ["mobbin.com/_next/image"],
+      "category": "real-apps",
+      "priority": 1,
+      "description": "600K+ real app screens, flows, filtering"
+    },
+    "screenlane": {
+      "id": "screenlane",
+      "label": "Screenlane",
+      "color": "#6366f1",
+      "queryTemplate": "site:screenlane.com {terms}",
+      "ogImagePattern": "screenlane.com",
+      "cdnPatterns": [],
+      "category": "real-apps",
+      "priority": 1,
+      "description": "User flow recordings with annotations"
+    },
+    "pageflows": {
+      "id": "pageflows",
+      "label": "Page Flows",
+      "color": "#8b5cf6",
+      "queryTemplate": "site:pageflows.com {terms}",
+      "ogImagePattern": "pageflows.com",
+      "cdnPatterns": [],
+      "category": "real-apps",
+      "priority": 1,
+      "description": "User flow recordings with annotations"
+    },
+    "uisources": {
+      "id": "uisources",
+      "label": "UI Sources",
+      "color": "#14b8a6",
+      "queryTemplate": "site:uisources.com {terms}",
+      "ogImagePattern": "uisources.com",
+      "cdnPatterns": [],
+      "category": "real-apps",
+      "priority": 2,
+      "description": "Component-level patterns, App Store screenshots"
+    },
+    "pttrns": {
+      "id": "pttrns",
+      "label": "Pttrns",
+      "color": "#f97316",
+      "queryTemplate": "site:pttrns.com {terms}",
+      "ogImagePattern": "pttrns.com",
+      "cdnPatterns": [],
+      "category": "real-apps",
+      "priority": 3,
+      "description": "iOS-specific patterns"
+    },
+    "v0": {
+      "id": "v0",
+      "label": "v0",
+      "color": "#000000",
+      "queryTemplate": "site:v0.dev {terms}",
+      "ogImagePattern": "v0.dev",
+      "cdnPatterns": [],
+      "category": "ai",
+      "priority": 2,
+      "description": "AI-generated React/Tailwind components",
+      "hasCode": true
+    },
+    "uisyntax": {
+      "id": "uisyntax",
+      "label": "UI Syntax",
+      "color": "#22c55e",
+      "queryTemplate": "site:ui-syntax.com {terms}",
+      "ogImagePattern": "ui-syntax.com",
+      "cdnPatterns": [],
+      "category": "ai",
+      "priority": 3,
+      "description": "Curated AI-generated layouts with code",
+      "hasCode": true
+    },
+    "inspoai": {
+      "id": "inspoai",
+      "label": "InspoAI",
+      "color": "#3b82f6",
+      "queryTemplate": "site:inspoai.io {terms}",
+      "ogImagePattern": "inspoai.io",
+      "cdnPatterns": [],
+      "category": "ai",
+      "priority": 3,
+      "description": "AI-powered search across 150K+ assets"
+    },
+    "lapaninja": {
+      "id": "lapaninja",
+      "label": "Lapa Ninja",
+      "color": "#ef4444",
+      "queryTemplate": "site:lapa.ninja {terms}",
+      "ogImagePattern": "lapa.ninja",
+      "cdnPatterns": [],
+      "category": "specialized",
+      "priority": 3,
+      "description": "Landing page inspiration"
+    },
+    "saaspages": {
+      "id": "saaspages",
+      "label": "SaaS Pages",
+      "color": "#8b5cf6",
+      "queryTemplate": "site:saaspages.xyz {terms}",
+      "ogImagePattern": "saaspages.xyz",
+      "cdnPatterns": [],
+      "category": "specialized",
+      "priority": 3,
+      "description": "SaaS-specific design patterns"
+    },
+    "godly": {
+      "id": "godly",
+      "label": "Godly",
+      "color": "#fbbf24",
+      "queryTemplate": "site:godly.website {terms}",
+      "ogImagePattern": "godly.website",
+      "cdnPatterns": ["res.cloudinary.com"],
+      "category": "specialized",
+      "priority": 3,
+      "description": "Award-winning web design"
+    },
+    "awwwards": {
+      "id": "awwwards",
+      "label": "Awwwards",
+      "color": "#10b981",
+      "queryTemplate": "site:awwwards.com {terms}",
+      "ogImagePattern": "awwwards.com",
+      "cdnPatterns": ["assets.awwwards.com"],
+      "category": "specialized",
+      "priority": 3,
+      "description": "Cutting-edge web experiences"
+    },
+    "designspells": {
+      "id": "designspells",
+      "label": "Design Spells",
+      "color": "#ec4899",
+      "queryTemplate": "site:designspells.com {terms}",
+      "ogImagePattern": "designspells.com",
+      "cdnPatterns": [],
+      "category": "specialized",
+      "priority": 3,
+      "description": "Micro-interactions and animations"
+    },
+    "product": {
+      "id": "product",
+      "label": "Products",
+      "color": "#10b981",
+      "queryTemplate": "{terms} UI {category} 2025 2026",
+      "ogImagePattern": null,
+      "cdnPatterns": [],
+      "category": "products",
+      "priority": 1,
+      "description": "Live products to reference"
+    },
+    "patterns": {
+      "id": "patterns",
+      "label": "Patterns",
+      "color": "#6366f1",
+      "queryTemplate": "{terms} UX design patterns examples",
+      "ogImagePattern": null,
+      "cdnPatterns": [],
+      "category": "analysis",
+      "priority": 2,
+      "description": "Blog posts comparing approaches"
+    },
+    "youtube": {
+      "id": "youtube",
+      "label": "YouTube",
+      "color": "#ef4444",
+      "queryTemplate": "{terms} UI walkthrough site:youtube.com",
+      "ogImagePattern": "i.ytimg.com",
+      "cdnPatterns": ["i.ytimg.com"],
+      "category": "video",
+      "priority": 3,
+      "description": "Video walkthroughs, interactions in motion"
+    },
+    "reddit": {
+      "id": "reddit",
+      "label": "Reddit",
+      "color": "#ff4500",
+      "queryTemplate": "site:reddit.com/r/UI_Design OR site:reddit.com/r/web_design {terms}",
+      "ogImagePattern": null,
+      "cdnPatterns": ["i.redd.it", "imgur.com"],
+      "category": "community",
+      "priority": 2,
+      "description": "Real practitioner discussions, critiques"
+    }
+  },
+  "categories": {
+    "real-apps": {
+      "label": "Real Apps",
+      "description": "Production UI screenshots from actual apps",
+      "priority": 1
+    },
+    "gallery": {
+      "label": "Design Galleries",
+      "description": "Curated design showcases and portfolios",
+      "priority": 2
+    },
+    "ai": {
+      "label": "AI Sources",
+      "description": "AI-generated designs and components",
+      "priority": 3
+    },
+    "specialized": {
+      "label": "Specialized",
+      "description": "Niche design collections",
+      "priority": 3
+    },
+    "products": {
+      "label": "Products",
+      "description": "Direct product searches",
+      "priority": 1
+    },
+    "analysis": {
+      "label": "Analysis",
+      "description": "Pattern analysis and comparisons",
+      "priority": 2
+    },
+    "video": {
+      "label": "Video",
+      "description": "Video walkthroughs and demos",
+      "priority": 3
+    },
+    "community": {
+      "label": "Community",
+      "description": "Discussion forums and communities",
+      "priority": 2
+    }
+  }
+}

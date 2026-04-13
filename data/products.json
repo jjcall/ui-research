@@ -1,0 +1,358 @@
+{
+  "version": "1.0.0",
+  "description": "Pattern to product mappings for product-aware queries. These are guides, not limits - Claude generates additional products for novel patterns.",
+  "patterns": {
+    "kanban": {
+      "products": ["Linear", "Trello", "Notion", "Asana", "Monday.com", "Jira", "Height", "Shortcut", "ClickUp", "Basecamp"],
+      "category": "productivity"
+    },
+    "timeline": {
+      "products": ["Linear", "Notion", "Airtable", "Monday.com", "Asana", "TeamGantt", "ClickUp", "Basecamp"],
+      "category": "productivity"
+    },
+    "calendar": {
+      "products": ["Google Calendar", "Notion", "Cron", "Fantastical", "Cal.com", "Calendly", "Apple Calendar", "Outlook"],
+      "category": "productivity"
+    },
+    "command-palette": {
+      "products": ["Linear", "Raycast", "Figma", "VS Code", "Slack", "Notion", "Superhuman", "Arc", "Cursor"],
+      "category": "productivity"
+    },
+    "settings": {
+      "products": ["Linear", "Figma", "Notion", "Slack", "Discord", "GitHub", "Stripe", "Vercel", "Spotify"],
+      "category": "general"
+    },
+    "sidebar": {
+      "products": ["Linear", "Notion", "Slack", "Discord", "Figma", "VS Code", "Obsidian", "Arc", "Spotify"],
+      "category": "navigation"
+    },
+    "tabs": {
+      "products": ["Arc", "Chrome", "Figma", "Notion", "Linear", "GitHub", "VS Code", "Stripe"],
+      "category": "navigation"
+    },
+    "modal": {
+      "products": ["Linear", "Figma", "Notion", "Slack", "GitHub", "Stripe", "Vercel", "Shopify"],
+      "category": "feedback"
+    },
+    "toast": {
+      "products": ["Linear", "Vercel", "GitHub", "Stripe", "Notion", "Figma", "Slack"],
+      "category": "feedback"
+    },
+    "dashboard": {
+      "products": ["Stripe", "Vercel", "Amplitude", "Mixpanel", "PostHog", "Metabase", "Grafana", "Datadog", "Linear"],
+      "category": "analytics"
+    },
+    "table": {
+      "products": ["Airtable", "Notion", "Linear", "GitHub", "Stripe", "Retool", "Supabase", "PlanetScale"],
+      "category": "data"
+    },
+    "data-grid": {
+      "products": ["Airtable", "Notion", "Google Sheets", "Coda", "Retool", "Rows", "Equals"],
+      "category": "data"
+    },
+    "chart": {
+      "products": ["Amplitude", "Mixpanel", "PostHog", "Stripe", "Linear", "Metabase", "Grafana", "Observable"],
+      "category": "analytics"
+    },
+    "form": {
+      "products": ["Typeform", "Tally", "Fillout", "Linear", "Notion", "Airtable", "Stripe", "Clerk"],
+      "category": "input"
+    },
+    "search": {
+      "products": ["Algolia", "Slack", "Notion", "Linear", "GitHub", "Spotify", "Arc", "Raycast"],
+      "category": "navigation"
+    },
+    "onboarding": {
+      "products": ["Notion", "Linear", "Figma", "Slack", "Loom", "Stripe", "Vercel", "Webflow"],
+      "category": "flow"
+    },
+    "login": {
+      "products": ["Clerk", "Auth0", "Linear", "Notion", "Figma", "GitHub", "Stripe", "Vercel"],
+      "category": "auth"
+    },
+    "sign-up": {
+      "products": ["Clerk", "Linear", "Notion", "Figma", "Stripe", "Vercel", "Webflow", "Framer"],
+      "category": "auth"
+    },
+    "pricing": {
+      "products": ["Stripe", "Linear", "Notion", "Figma", "Vercel", "Webflow", "Framer", "Lemon Squeezy"],
+      "category": "marketing"
+    },
+    "checkout": {
+      "products": ["Stripe", "Shopify", "Gumroad", "Lemon Squeezy", "Paddle", "Square"],
+      "category": "commerce"
+    },
+    "profile": {
+      "products": ["Linear", "Notion", "Figma", "GitHub", "Slack", "Discord", "Twitter", "LinkedIn"],
+      "category": "account"
+    },
+    "navbar": {
+      "products": ["Linear", "Notion", "Stripe", "Vercel", "Arc", "Figma", "GitHub", "Webflow"],
+      "category": "navigation"
+    },
+    "bottom-navigation": {
+      "products": ["Instagram", "Twitter", "Spotify", "YouTube", "TikTok", "Uber", "DoorDash"],
+      "category": "mobile"
+    },
+    "drawer": {
+      "products": ["Gmail", "Slack", "Linear", "Notion", "Figma", "Arc", "VS Code"],
+      "category": "navigation"
+    },
+    "dropdown": {
+      "products": ["Linear", "Figma", "Notion", "GitHub", "Slack", "Stripe", "Vercel"],
+      "category": "input"
+    },
+    "combobox": {
+      "products": ["Linear", "Notion", "GitHub", "Figma", "Slack", "VS Code", "Raycast"],
+      "category": "input"
+    },
+    "autocomplete": {
+      "products": ["Google", "Algolia", "Linear", "Notion", "GitHub", "Slack", "Raycast"],
+      "category": "input"
+    },
+    "date-picker": {
+      "products": ["Linear", "Notion", "Cron", "Cal.com", "Calendly", "Airtable", "Monday.com"],
+      "category": "input"
+    },
+    "file-uploader": {
+      "products": ["Dropbox", "Google Drive", "Notion", "Linear", "Figma", "Slack", "Discord"],
+      "category": "input"
+    },
+    "avatar": {
+      "products": ["Slack", "Discord", "GitHub", "Linear", "Notion", "Figma", "Twitter"],
+      "category": "display"
+    },
+    "badge": {
+      "products": ["Slack", "Discord", "Linear", "GitHub", "Notion", "iOS", "macOS"],
+      "category": "display"
+    },
+    "card": {
+      "products": ["Trello", "Notion", "Linear", "Stripe", "Vercel", "Figma", "Webflow"],
+      "category": "display"
+    },
+    "list": {
+      "products": ["Todoist", "Things", "Linear", "Notion", "Apple Reminders", "ClickUp", "Asana"],
+      "category": "display"
+    },
+    "carousel": {
+      "products": ["Airbnb", "Netflix", "Spotify", "Instagram", "Shopify", "Webflow"],
+      "category": "display"
+    },
+    "gallery": {
+      "products": ["Unsplash", "Dribbble", "Behance", "Instagram", "Pinterest", "Figma"],
+      "category": "display"
+    },
+    "accordion": {
+      "products": ["Stripe", "Notion", "Linear", "GitHub", "Vercel", "Webflow"],
+      "category": "display"
+    },
+    "tree": {
+      "products": ["VS Code", "Figma", "Notion", "GitHub", "Linear", "Obsidian", "Finder"],
+      "category": "navigation"
+    },
+    "stepper": {
+      "products": ["Stripe", "Typeform", "Linear", "Notion", "Shopify", "Webflow"],
+      "category": "flow"
+    },
+    "progress": {
+      "products": ["Linear", "GitHub", "Notion", "Stripe", "Vercel", "AWS"],
+      "category": "feedback"
+    },
+    "skeleton": {
+      "products": ["Linear", "Notion", "GitHub", "Slack", "Facebook", "LinkedIn"],
+      "category": "loading"
+    },
+    "spinner": {
+      "products": ["Linear", "Vercel", "GitHub", "Apple", "Google", "Stripe"],
+      "category": "loading"
+    },
+    "empty-state": {
+      "products": ["Linear", "Notion", "Figma", "Slack", "GitHub", "Dropbox", "Mailchimp"],
+      "category": "feedback"
+    },
+    "error-page": {
+      "products": ["GitHub", "Stripe", "Vercel", "Linear", "Notion", "Airbnb"],
+      "category": "feedback"
+    },
+    "notification": {
+      "products": ["Slack", "Discord", "Linear", "Notion", "iOS", "macOS", "GitHub"],
+      "category": "feedback"
+    },
+    "alert": {
+      "products": ["Linear", "Stripe", "GitHub", "Vercel", "Notion", "Figma"],
+      "category": "feedback"
+    },
+    "tooltip": {
+      "products": ["Figma", "Linear", "Notion", "GitHub", "Stripe", "VS Code"],
+      "category": "help"
+    },
+    "popover": {
+      "products": ["Linear", "Figma", "Notion", "GitHub", "Slack", "Stripe"],
+      "category": "overlay"
+    },
+    "context-menu": {
+      "products": ["Figma", "VS Code", "Notion", "Linear", "macOS", "Arc"],
+      "category": "navigation"
+    },
+    "action-sheet": {
+      "products": ["iOS", "Instagram", "Twitter", "Slack", "Discord", "Spotify"],
+      "category": "mobile"
+    },
+    "bottom-sheet": {
+      "products": ["Google Maps", "Uber", "Apple Maps", "Spotify", "YouTube", "Instagram"],
+      "category": "mobile"
+    },
+    "switch": {
+      "products": ["iOS", "Linear", "Notion", "Figma", "Slack", "macOS", "Android"],
+      "category": "input"
+    },
+    "checkbox": {
+      "products": ["Linear", "Notion", "GitHub", "Todoist", "Apple", "Google"],
+      "category": "input"
+    },
+    "radio": {
+      "products": ["Stripe", "Linear", "Notion", "Typeform", "Google Forms"],
+      "category": "input"
+    },
+    "slider": {
+      "products": ["Spotify", "Figma", "Linear", "YouTube", "macOS", "iOS"],
+      "category": "input"
+    },
+    "ai-chat": {
+      "products": ["ChatGPT", "Claude", "Perplexity", "Cursor", "GitHub Copilot", "Notion AI", "Jasper"],
+      "category": "ai"
+    },
+    "code-editor": {
+      "products": ["VS Code", "Cursor", "GitHub", "Replit", "CodeSandbox", "StackBlitz", "Monaco"],
+      "category": "developer"
+    },
+    "markdown-editor": {
+      "products": ["Notion", "Obsidian", "Bear", "iA Writer", "Craft", "Typora", "HackMD"],
+      "category": "writing"
+    },
+    "video-player": {
+      "products": ["YouTube", "Vimeo", "Netflix", "Loom", "Mux", "Wistia"],
+      "category": "media"
+    },
+    "collaboration": {
+      "products": ["Figma", "Notion", "Linear", "Miro", "Google Docs", "Loom", "Slack"],
+      "category": "productivity"
+    },
+    "commenting": {
+      "products": ["Figma", "Notion", "Linear", "GitHub", "Google Docs", "Loom"],
+      "category": "collaboration"
+    },
+    "mention": {
+      "products": ["Slack", "Discord", "Notion", "Linear", "GitHub", "Twitter"],
+      "category": "social"
+    },
+    "emoji-picker": {
+      "products": ["Slack", "Discord", "Notion", "Linear", "Twitter", "iOS"],
+      "category": "input"
+    },
+    "reaction": {
+      "products": ["Slack", "Discord", "GitHub", "Linear", "Notion", "Facebook"],
+      "category": "social"
+    },
+    "billing": {
+      "products": ["Stripe", "Linear", "Notion", "Figma", "Vercel", "AWS", "GitHub"],
+      "category": "account"
+    },
+    "integrations": {
+      "products": ["Zapier", "Notion", "Linear", "Slack", "GitHub", "Figma", "Stripe"],
+      "category": "settings"
+    },
+    "permissions": {
+      "products": ["Notion", "Linear", "Figma", "GitHub", "Slack", "Google Drive"],
+      "category": "settings"
+    },
+    "workspace": {
+      "products": ["Notion", "Linear", "Slack", "Figma", "GitHub", "Vercel", "Supabase"],
+      "category": "organization"
+    },
+    "landing-page": {
+      "products": ["Linear", "Vercel", "Stripe", "Notion", "Figma", "Webflow", "Framer"],
+      "category": "marketing"
+    },
+    "hero": {
+      "products": ["Linear", "Vercel", "Stripe", "Arc", "Raycast", "Webflow", "Framer"],
+      "category": "marketing"
+    },
+    "dark-mode": {
+      "products": ["Linear", "Notion", "Figma", "VS Code", "Arc", "Discord", "Slack", "GitHub"],
+      "category": "theme"
+    },
+    "infinite-scroll": {
+      "products": ["Twitter", "Instagram", "TikTok", "Pinterest", "Reddit", "LinkedIn"],
+      "category": "navigation"
+    },
+    "drag-and-drop": {
+      "products": ["Trello", "Linear", "Notion", "Figma", "Miro", "Monday.com", "ClickUp"],
+      "category": "interaction"
+    },
+    "split-view": {
+      "products": ["Linear", "Notion", "Apple Mail", "Superhuman", "VS Code", "Figma"],
+      "category": "layout"
+    },
+    "breadcrumbs": {
+      "products": ["Notion", "Linear", "GitHub", "Stripe", "AWS", "Shopify"],
+      "category": "navigation"
+    },
+    "pagination": {
+      "products": ["GitHub", "Stripe", "Linear", "Notion", "Google", "Amazon"],
+      "category": "navigation"
+    },
+    "filter": {
+      "products": ["Airbnb", "Amazon", "Shopify", "Linear", "Notion", "GitHub"],
+      "category": "search"
+    },
+    "export": {
+      "products": ["Notion", "Linear", "Figma", "Airtable", "Google Sheets", "Stripe"],
+      "category": "action"
+    },
+    "import": {
+      "products": ["Notion", "Linear", "Airtable", "Trello", "Asana", "Monday.com"],
+      "category": "action"
+    },
+    "notification-center": {
+      "products": ["Slack", "Discord", "Linear", "GitHub", "Notion", "iOS", "macOS"],
+      "category": "feedback"
+    },
+    "keyboard-shortcuts": {
+      "products": ["Linear", "Figma", "Notion", "VS Code", "Superhuman", "Arc", "Raycast"],
+      "category": "productivity"
+    },
+    "hamburger-menu": {
+      "products": ["Airbnb", "Uber", "Instagram", "Spotify", "Netflix", "Amazon"],
+      "category": "mobile"
+    },
+    "mega-menu": {
+      "products": ["Amazon", "Apple", "Microsoft", "Shopify", "Webflow"],
+      "category": "navigation"
+    },
+    "wizard": {
+      "products": ["Stripe", "Typeform", "Linear", "Notion", "Webflow", "Shopify"],
+      "category": "flow"
+    },
+    "shopping-cart": {
+      "products": ["Shopify", "Amazon", "Apple", "Nike", "Stripe", "Gumroad"],
+      "category": "commerce"
+    },
+    "rating": {
+      "products": ["Amazon", "Airbnb", "Uber", "Google", "Yelp", "App Store"],
+      "category": "input"
+    }
+  },
+  "productsByCategory": {
+    "productivity": ["Linear", "Notion", "Asana", "Monday.com", "Trello", "ClickUp", "Todoist", "Things", "Craft", "Obsidian", "Roam", "Coda", "Airtable", "Height", "Shortcut", "Basecamp"],
+    "design": ["Figma", "Framer", "Sketch", "Canva", "Miro", "FigJam", "Whimsical", "Excalidraw", "Spline", "Rive", "Loom", "Pitch"],
+    "developer": ["GitHub", "GitLab", "VS Code", "Cursor", "Vercel", "Netlify", "Railway", "Supabase", "PlanetScale", "Neon", "Raycast", "Replit", "CodeSandbox", "StackBlitz"],
+    "communication": ["Slack", "Discord", "Teams", "Zoom", "Loom", "Intercom", "Crisp", "Front", "Missive", "Superhuman", "Spark", "Around"],
+    "analytics": ["Stripe", "Amplitude", "Mixpanel", "PostHog", "June", "Metabase", "Grafana", "Datadog", "Baremetrics"],
+    "commerce": ["Shopify", "Gumroad", "Lemon Squeezy", "Paddle", "Square", "Amazon", "Stripe"],
+    "consumer": ["Airbnb", "Uber", "DoorDash", "Instacart", "Spotify", "Netflix", "YouTube", "TikTok", "Instagram", "Twitter", "Threads", "Pinterest", "Reddit"],
+    "utilities": ["1Password", "Raycast", "Alfred", "Arc", "Cron", "Cal.com", "Calendly", "Luma"],
+    "ai": ["ChatGPT", "Claude", "Perplexity", "Cursor", "GitHub Copilot", "Notion AI", "v0", "Replit Agent", "Jasper"],
+    "marketing": ["Mailchimp", "ConvertKit", "Beehiiv", "Substack", "Webflow", "Framer", "Typeform", "Tally"]
+  }
+}

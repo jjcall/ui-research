@@ -1,0 +1,9 @@
+{
+  "hooks": [
+    {
+      "event": "SessionStart",
+      "script": "hooks/scripts/check-deps.sh",
+      "description": "Verify Playwright is installed for Tier 0 screenshots"
+    }
+  ]
+}

@@ -1,0 +1,506 @@
+{
+  "version": "1.0.0",
+  "description": "UI/UX pattern synonyms for semantic expansion. These are guides, not limits - Claude generates additional terms for novel concepts.",
+  "patterns": {
+    "accordion": {
+      "synonyms": ["collapsible", "expandable section", "disclosure", "expand/collapse", "foldable content", "expandable panel"],
+      "related": ["tree", "nested-list", "progressive-disclosure"]
+    },
+    "action-sheet": {
+      "synonyms": ["bottom action menu", "share sheet", "action menu", "iOS action sheet", "contextual actions"],
+      "related": ["bottom-sheet", "context-menu", "modal"]
+    },
+    "alert": {
+      "synonyms": ["warning", "error message", "system message", "inline alert", "alert banner", "notification banner"],
+      "related": ["toast", "notification", "banner", "dialog"]
+    },
+    "app-shell": {
+      "synonyms": ["application layout", "main layout", "shell layout", "app frame", "page wrapper", "layout wrapper"],
+      "related": ["sidebar", "navbar", "header", "footer"]
+    },
+    "autocomplete": {
+      "synonyms": ["typeahead", "autosuggest", "predictive text", "search suggestions", "auto-complete input", "suggestion dropdown"],
+      "related": ["search-input", "combobox", "dropdown"]
+    },
+    "avatar": {
+      "synonyms": ["profile picture", "user image", "profile photo", "user avatar", "profile avatar", "account image"],
+      "related": ["badge", "chip", "user-card"]
+    },
+    "badge": {
+      "synonyms": ["notification badge", "counter badge", "indicator", "dot indicator", "status badge", "count badge"],
+      "related": ["chip", "tag", "avatar"]
+    },
+    "banner": {
+      "synonyms": ["announcement bar", "notification bar", "info bar", "site banner", "top banner", "promo banner"],
+      "related": ["alert", "toast", "notification"]
+    },
+    "bottom-navigation": {
+      "synonyms": ["tab bar", "bottom tabs", "mobile navigation", "bottom nav", "footer navigation", "app tabs"],
+      "related": ["tabs", "navbar", "navigation"]
+    },
+    "bottom-sheet": {
+      "synonyms": ["sheet", "drawer from bottom", "pull-up drawer", "slide-up panel", "modal sheet", "half-sheet"],
+      "related": ["modal", "drawer", "action-sheet"]
+    },
+    "breadcrumbs": {
+      "synonyms": ["breadcrumb navigation", "path indicator", "navigation trail", "location indicator", "hierarchy path"],
+      "related": ["pagination", "stepper", "navigation"]
+    },
+    "button": {
+      "synonyms": ["CTA", "call to action", "action button", "clickable button", "submit button", "primary button"],
+      "related": ["icon-button", "FAB", "button-group", "link"]
+    },
+    "button-group": {
+      "synonyms": ["segmented button", "button toolbar", "grouped buttons", "toggle group", "button row"],
+      "related": ["button", "tabs", "toggle"]
+    },
+    "calendar": {
+      "synonyms": ["date view", "calendar view", "month view", "calendar grid", "schedule view", "date grid"],
+      "related": ["date-picker", "timeline", "scheduler"]
+    },
+    "card": {
+      "synonyms": ["content card", "info card", "tile", "panel", "content block", "card component"],
+      "related": ["list", "grid", "carousel"]
+    },
+    "carousel": {
+      "synonyms": ["slider", "image carousel", "slideshow", "content slider", "swiper", "image slider", "gallery slider"],
+      "related": ["gallery", "tabs", "pagination"]
+    },
+    "chart": {
+      "synonyms": ["graph", "data visualization", "data chart", "analytics chart", "visualization", "diagram"],
+      "related": ["dashboard", "table", "metrics"]
+    },
+    "checkbox": {
+      "synonyms": ["check box", "tick box", "selection box", "multi-select option", "checkmark input"],
+      "related": ["radio", "switch", "toggle"]
+    },
+    "chip": {
+      "synonyms": ["tag", "pill", "badge", "label", "token", "filter chip", "input chip"],
+      "related": ["badge", "tag", "button"]
+    },
+    "color-picker": {
+      "synonyms": ["color selector", "color chooser", "palette picker", "hue picker", "color input"],
+      "related": ["input", "dropdown", "popover"]
+    },
+    "combobox": {
+      "synonyms": ["combo box", "editable dropdown", "searchable select", "filterable dropdown", "autocomplete select"],
+      "related": ["select", "dropdown", "autocomplete"]
+    },
+    "command-palette": {
+      "synonyms": ["command bar", "quick actions", "spotlight", "omnibar", "command menu", "keyboard launcher", "action palette"],
+      "related": ["search", "modal", "keyboard-shortcuts"]
+    },
+    "context-menu": {
+      "synonyms": ["right-click menu", "contextual menu", "popup menu", "options menu", "action menu"],
+      "related": ["dropdown-menu", "action-sheet", "popover"]
+    },
+    "dashboard": {
+      "synonyms": ["admin dashboard", "analytics dashboard", "control panel", "overview page", "metrics dashboard", "home dashboard"],
+      "related": ["chart", "table", "card", "metrics"]
+    },
+    "data-grid": {
+      "synonyms": ["data table", "spreadsheet", "grid view", "tabular data", "excel-like table", "editable table"],
+      "related": ["table", "list", "pagination"]
+    },
+    "date-picker": {
+      "synonyms": ["calendar picker", "date selector", "date input", "datepicker", "calendar input", "date chooser"],
+      "related": ["calendar", "time-picker", "input"]
+    },
+    "detail-view": {
+      "synonyms": ["detail page", "item detail", "single view", "entity view", "record detail", "detail panel"],
+      "related": ["list", "modal", "drawer"]
+    },
+    "dialog": {
+      "synonyms": ["modal dialog", "popup dialog", "confirmation dialog", "alert dialog", "prompt"],
+      "related": ["modal", "alert", "popover"]
+    },
+    "divider": {
+      "synonyms": ["separator", "horizontal rule", "line separator", "content divider", "section divider"],
+      "related": ["spacing", "layout"]
+    },
+    "drag-and-drop": {
+      "synonyms": ["draggable", "sortable", "reorderable", "drag to reorder", "drag handle", "dnd"],
+      "related": ["kanban", "list", "file-uploader"]
+    },
+    "drawer": {
+      "synonyms": ["side drawer", "navigation drawer", "slide-out panel", "off-canvas menu", "slide-in panel"],
+      "related": ["sidebar", "modal", "bottom-sheet"]
+    },
+    "dropdown": {
+      "synonyms": ["dropdown menu", "select menu", "pulldown", "drop-down", "menu dropdown"],
+      "related": ["select", "combobox", "popover"]
+    },
+    "dropdown-menu": {
+      "synonyms": ["menu", "action menu", "options dropdown", "submenu", "flyout menu"],
+      "related": ["context-menu", "dropdown", "popover"]
+    },
+    "empty-state": {
+      "synonyms": ["zero state", "blank state", "no data state", "placeholder state", "first-time user", "onboarding state"],
+      "related": ["loading", "error-state", "onboarding"]
+    },
+    "error-page": {
+      "synonyms": ["404 page", "error state", "not found", "error screen", "500 page", "broken page"],
+      "related": ["empty-state", "loading", "alert"]
+    },
+    "FAB": {
+      "synonyms": ["floating action button", "floating button", "action button", "plus button", "create button"],
+      "related": ["button", "icon-button"]
+    },
+    "file-uploader": {
+      "synonyms": ["upload", "file input", "drag and drop upload", "file picker", "attachment picker", "upload zone"],
+      "related": ["input", "drag-and-drop", "progress"]
+    },
+    "filter": {
+      "synonyms": ["filter panel", "faceted search", "filter sidebar", "refinement", "search filters", "facets"],
+      "related": ["search", "sidebar", "chip"]
+    },
+    "footer": {
+      "synonyms": ["page footer", "site footer", "bottom bar", "footer navigation"],
+      "related": ["navbar", "header", "app-shell"]
+    },
+    "form": {
+      "synonyms": ["input form", "data form", "entry form", "form fields", "form layout"],
+      "related": ["input", "validation", "button"]
+    },
+    "gallery": {
+      "synonyms": ["image gallery", "photo gallery", "media gallery", "grid gallery", "lightbox gallery"],
+      "related": ["carousel", "masonry", "grid"]
+    },
+    "grid": {
+      "synonyms": ["grid layout", "card grid", "tile grid", "responsive grid", "gallery grid"],
+      "related": ["masonry", "list", "card"]
+    },
+    "hamburger-menu": {
+      "synonyms": ["mobile menu", "burger menu", "three-line menu", "nav toggle", "menu icon"],
+      "related": ["drawer", "navbar", "navigation"]
+    },
+    "header": {
+      "synonyms": ["page header", "site header", "top bar", "masthead", "hero header"],
+      "related": ["navbar", "footer", "app-shell"]
+    },
+    "hero": {
+      "synonyms": ["hero section", "hero banner", "above the fold", "landing hero", "hero image"],
+      "related": ["header", "banner", "CTA"]
+    },
+    "icon-button": {
+      "synonyms": ["icon only button", "icon action", "toolbar button", "symbol button"],
+      "related": ["button", "FAB", "toolbar"]
+    },
+    "image": {
+      "synonyms": ["photo", "picture", "media", "figure", "illustration"],
+      "related": ["avatar", "gallery", "carousel"]
+    },
+    "input": {
+      "synonyms": ["text field", "text input", "form field", "input field", "textbox"],
+      "related": ["textarea", "form", "validation"]
+    },
+    "kanban": {
+      "synonyms": ["kanban board", "task board", "card board", "column view", "swim lanes", "board view", "project board", "status columns", "trello-style"],
+      "related": ["drag-and-drop", "card", "list", "timeline"]
+    },
+    "keyboard-shortcuts": {
+      "synonyms": ["hotkeys", "key bindings", "shortcuts", "keyboard commands", "accelerators"],
+      "related": ["command-palette", "tooltip"]
+    },
+    "landing-page": {
+      "synonyms": ["home page", "marketing page", "product page", "sales page", "conversion page"],
+      "related": ["hero", "CTA", "pricing"]
+    },
+    "lightbox": {
+      "synonyms": ["image viewer", "photo viewer", "fullscreen image", "image modal", "zoom view"],
+      "related": ["modal", "gallery", "carousel"]
+    },
+    "link": {
+      "synonyms": ["hyperlink", "anchor", "text link", "inline link", "navigation link"],
+      "related": ["button", "navigation", "breadcrumbs"]
+    },
+    "list": {
+      "synonyms": ["list view", "item list", "vertical list", "content list", "feed"],
+      "related": ["card", "table", "grid"]
+    },
+    "loading": {
+      "synonyms": ["loading state", "loading indicator", "spinner", "progress indicator", "fetching state"],
+      "related": ["skeleton", "progress", "empty-state"]
+    },
+    "login": {
+      "synonyms": ["sign in", "log in", "authentication", "login form", "signin page"],
+      "related": ["sign-up", "form", "password-input"]
+    },
+    "masonry": {
+      "synonyms": ["masonry grid", "pinterest layout", "staggered grid", "waterfall layout", "dynamic grid"],
+      "related": ["grid", "gallery", "card"]
+    },
+    "mega-menu": {
+      "synonyms": ["mega dropdown", "full-width menu", "expanded menu", "large navigation menu"],
+      "related": ["navbar", "dropdown-menu", "navigation"]
+    },
+    "metrics": {
+      "synonyms": ["KPIs", "stats", "statistics", "numbers", "data points", "key metrics"],
+      "related": ["dashboard", "chart", "card"]
+    },
+    "modal": {
+      "synonyms": ["popup", "dialog", "overlay", "lightbox", "modal window", "popup window"],
+      "related": ["dialog", "drawer", "bottom-sheet"]
+    },
+    "navbar": {
+      "synonyms": ["navigation bar", "top navigation", "header navigation", "main navigation", "nav bar", "top bar"],
+      "related": ["header", "sidebar", "tabs"]
+    },
+    "notification": {
+      "synonyms": ["push notification", "alert notification", "system notification", "in-app notification"],
+      "related": ["toast", "badge", "alert"]
+    },
+    "onboarding": {
+      "synonyms": ["user onboarding", "welcome flow", "getting started", "product tour", "walkthrough", "first-run experience"],
+      "related": ["stepper", "tooltip", "empty-state"]
+    },
+    "OTP-input": {
+      "synonyms": ["verification code input", "pin input", "code input", "2FA input", "one-time password"],
+      "related": ["input", "form", "login"]
+    },
+    "pagination": {
+      "synonyms": ["pager", "page navigation", "page numbers", "paginator", "load more"],
+      "related": ["table", "list", "infinite-scroll"]
+    },
+    "password-input": {
+      "synonyms": ["password field", "secure input", "password toggle", "show/hide password"],
+      "related": ["input", "login", "form"]
+    },
+    "popover": {
+      "synonyms": ["popup", "tooltip popup", "info popover", "hover card", "floating panel"],
+      "related": ["tooltip", "dropdown", "modal"]
+    },
+    "pricing": {
+      "synonyms": ["pricing table", "pricing cards", "plan comparison", "subscription tiers", "pricing page"],
+      "related": ["card", "table", "landing-page"]
+    },
+    "profile": {
+      "synonyms": ["user profile", "account page", "profile page", "my account", "user settings"],
+      "related": ["settings", "avatar", "form"]
+    },
+    "progress": {
+      "synonyms": ["progress bar", "progress indicator", "loading bar", "completion bar", "status bar"],
+      "related": ["loading", "stepper", "upload"]
+    },
+    "radio": {
+      "synonyms": ["radio button", "radio group", "single select", "option button", "radio input"],
+      "related": ["checkbox", "toggle", "select"]
+    },
+    "rail": {
+      "synonyms": ["navigation rail", "side rail", "icon navigation", "vertical toolbar", "mini sidebar"],
+      "related": ["sidebar", "navbar", "tabs"]
+    },
+    "rating": {
+      "synonyms": ["star rating", "review rating", "score rating", "rate input", "stars"],
+      "related": ["input", "feedback"]
+    },
+    "search": {
+      "synonyms": ["search bar", "search input", "search field", "global search", "site search"],
+      "related": ["autocomplete", "filter", "command-palette"]
+    },
+    "search-results": {
+      "synonyms": ["results page", "search page", "SERP", "listings", "query results"],
+      "related": ["list", "filter", "pagination"]
+    },
+    "select": {
+      "synonyms": ["dropdown select", "select input", "picker", "selection dropdown", "single select"],
+      "related": ["dropdown", "combobox", "radio"]
+    },
+    "settings": {
+      "synonyms": ["preferences", "configuration", "options", "settings page", "admin settings", "app settings"],
+      "related": ["form", "profile", "toggle"]
+    },
+    "sidebar": {
+      "synonyms": ["side navigation", "left nav", "navigation panel", "side panel", "nav sidebar", "app sidebar"],
+      "related": ["drawer", "navbar", "rail"]
+    },
+    "sign-up": {
+      "synonyms": ["registration", "create account", "sign up", "register", "signup form"],
+      "related": ["login", "form", "onboarding"]
+    },
+    "skeleton": {
+      "synonyms": ["skeleton loader", "placeholder", "shimmer", "loading skeleton", "ghost UI", "content placeholder"],
+      "related": ["loading", "empty-state"]
+    },
+    "slider": {
+      "synonyms": ["range slider", "input slider", "value slider", "scrubber", "range input"],
+      "related": ["input", "progress"]
+    },
+    "snackbar": {
+      "synonyms": ["toast", "notification toast", "feedback message", "action toast"],
+      "related": ["toast", "alert", "notification"]
+    },
+    "spinner": {
+      "synonyms": ["loading spinner", "loader", "activity indicator", "circular progress", "loading circle"],
+      "related": ["loading", "progress", "skeleton"]
+    },
+    "split-button": {
+      "synonyms": ["dropdown button", "button with menu", "combo button", "action split"],
+      "related": ["button", "dropdown-menu"]
+    },
+    "stepper": {
+      "synonyms": ["wizard", "step indicator", "progress steps", "multi-step", "step navigation", "workflow steps"],
+      "related": ["progress", "form", "onboarding"]
+    },
+    "switch": {
+      "synonyms": ["toggle switch", "on/off switch", "toggle button", "boolean toggle", "slide toggle"],
+      "related": ["toggle", "checkbox", "radio"]
+    },
+    "table": {
+      "synonyms": ["data table", "grid table", "spreadsheet", "tabular view", "list table"],
+      "related": ["data-grid", "list", "pagination"]
+    },
+    "tabs": {
+      "synonyms": ["tab navigation", "tab bar", "tabbed interface", "tab panel", "segmented control", "pill tabs"],
+      "related": ["navbar", "bottom-navigation", "stepper"]
+    },
+    "tag": {
+      "synonyms": ["label", "chip", "keyword tag", "category tag", "content tag"],
+      "related": ["chip", "badge", "filter"]
+    },
+    "textarea": {
+      "synonyms": ["text area", "multiline input", "rich text", "comment box", "long text input"],
+      "related": ["input", "form", "editor"]
+    },
+    "time-picker": {
+      "synonyms": ["time selector", "time input", "clock picker", "hour picker"],
+      "related": ["date-picker", "input", "calendar"]
+    },
+    "timeline": {
+      "synonyms": ["activity timeline", "history timeline", "event timeline", "gantt", "chronology", "roadmap"],
+      "related": ["list", "stepper", "kanban"]
+    },
+    "toast": {
+      "synonyms": ["notification toast", "snackbar", "popup message", "flash message", "feedback toast"],
+      "related": ["snackbar", "alert", "notification"]
+    },
+    "toggle": {
+      "synonyms": ["toggle button", "switch", "on/off", "binary toggle", "flip switch"],
+      "related": ["switch", "checkbox", "button-group"]
+    },
+    "toolbar": {
+      "synonyms": ["action bar", "tool bar", "button bar", "action toolbar", "editing toolbar"],
+      "related": ["navbar", "button-group", "icon-button"]
+    },
+    "tooltip": {
+      "synonyms": ["hint", "info tip", "hover text", "help text", "title tooltip"],
+      "related": ["popover", "help"]
+    },
+    "tree": {
+      "synonyms": ["tree view", "file tree", "nested tree", "hierarchy tree", "tree structure", "folder tree"],
+      "related": ["accordion", "list", "sidebar"]
+    },
+    "validation": {
+      "synonyms": ["form validation", "error state", "input validation", "field validation", "inline validation"],
+      "related": ["form", "input", "alert"]
+    },
+    "video-player": {
+      "synonyms": ["media player", "video controls", "player UI", "streaming player"],
+      "related": ["progress", "button", "slider"]
+    },
+    "wizard": {
+      "synonyms": ["multi-step form", "step-by-step", "guided flow", "setup wizard", "configuration wizard"],
+      "related": ["stepper", "form", "onboarding"]
+    },
+    "checkout": {
+      "synonyms": ["payment flow", "purchase flow", "cart checkout", "order flow", "buy flow"],
+      "related": ["form", "stepper", "card"]
+    },
+    "shopping-cart": {
+      "synonyms": ["cart", "basket", "bag", "order summary", "checkout cart"],
+      "related": ["checkout", "list", "card"]
+    },
+    "dark-mode": {
+      "synonyms": ["dark theme", "night mode", "dark UI", "theme toggle", "light/dark"],
+      "related": ["toggle", "settings", "theme"]
+    },
+    "responsive": {
+      "synonyms": ["mobile-first", "adaptive", "fluid layout", "breakpoints", "responsive design"],
+      "related": ["grid", "layout", "mobile"]
+    },
+    "infinite-scroll": {
+      "synonyms": ["endless scroll", "load more", "auto-load", "lazy load list", "continuous scroll"],
+      "related": ["pagination", "list", "loading"]
+    },
+    "parallax": {
+      "synonyms": ["parallax scroll", "scroll effect", "depth effect", "layered scroll"],
+      "related": ["animation", "hero", "landing-page"]
+    },
+    "sticky": {
+      "synonyms": ["fixed header", "sticky nav", "pinned element", "fixed position", "persistent header"],
+      "related": ["navbar", "header", "sidebar"]
+    },
+    "microinteraction": {
+      "synonyms": ["micro animation", "subtle animation", "feedback animation", "hover effect", "UI animation"],
+      "related": ["animation", "button", "loading"]
+    },
+    "split-view": {
+      "synonyms": ["split screen", "dual pane", "master-detail", "two-column", "list-detail"],
+      "related": ["sidebar", "drawer", "layout"]
+    },
+    "command-menu": {
+      "synonyms": ["command k", "cmd+k", "spotlight search", "quick launcher", "action search"],
+      "related": ["command-palette", "search", "modal"]
+    },
+    "ai-chat": {
+      "synonyms": ["chat interface", "conversational UI", "chatbot", "AI assistant", "chat UI", "message interface"],
+      "related": ["message", "input", "avatar"]
+    },
+    "code-editor": {
+      "synonyms": ["syntax highlighting", "code input", "IDE", "code view", "source editor"],
+      "related": ["textarea", "monaco", "highlighting"]
+    },
+    "markdown-editor": {
+      "synonyms": ["rich text editor", "WYSIWYG", "text editor", "content editor", "writing editor"],
+      "related": ["textarea", "toolbar", "preview"]
+    },
+    "emoji-picker": {
+      "synonyms": ["emoji selector", "emoticon picker", "reaction picker", "sticker picker"],
+      "related": ["popover", "grid", "search"]
+    },
+    "mention": {
+      "synonyms": ["@mention", "user mention", "tag user", "autocomplete mention"],
+      "related": ["autocomplete", "input", "avatar"]
+    },
+    "reaction": {
+      "synonyms": ["emoji reaction", "like button", "quick reaction", "sentiment"],
+      "related": ["button", "emoji-picker", "feedback"]
+    },
+    "commenting": {
+      "synonyms": ["comments", "comment thread", "discussion", "annotation", "feedback"],
+      "related": ["textarea", "avatar", "list"]
+    },
+    "collaboration": {
+      "synonyms": ["multiplayer", "real-time", "co-editing", "shared cursor", "presence"],
+      "related": ["avatar", "cursor", "commenting"]
+    },
+    "notification-center": {
+      "synonyms": ["inbox", "activity feed", "notification list", "alerts center"],
+      "related": ["notification", "list", "badge"]
+    },
+    "billing": {
+      "synonyms": ["payment", "subscription", "invoices", "payment method", "billing page"],
+      "related": ["form", "card", "settings"]
+    },
+    "integrations": {
+      "synonyms": ["connected apps", "third-party apps", "API connections", "plugins"],
+      "related": ["settings", "card", "list"]
+    },
+    "permissions": {
+      "synonyms": ["access control", "roles", "sharing", "team permissions", "privacy settings"],
+      "related": ["settings", "toggle", "form"]
+    },
+    "workspace": {
+      "synonyms": ["team space", "project space", "shared space", "organization"],
+      "related": ["sidebar", "settings", "dashboard"]
+    },
+    "export": {
+      "synonyms": ["download", "export data", "save as", "generate report"],
+      "related": ["button", "dropdown", "modal"]
+    },
+    "import": {
+      "synonyms": ["upload data", "import file", "bulk import", "data import"],
+      "related": ["file-uploader", "stepper", "form"]
+    }
+  }
+}
