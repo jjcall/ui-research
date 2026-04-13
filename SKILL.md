@@ -1,5 +1,5 @@
 ---
-name: research
+name: uir
 description: Research UI/UX patterns for any concept. Use when the user asks for 'ui research', 'design inspiration', 'moodboard', 'UI examples', or 'how do other apps handle X'. Decomposes concepts into searchable patterns, searches design sources (Dribbble, Behance, Mobbin, v0), extracts images, and generates a browsable HTML gallery.
 ---
 
