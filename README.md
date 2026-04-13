@@ -12,18 +12,22 @@ Research UI/UX patterns for any concept. This Claude plugin decomposes design co
 
 ## Installation
 
-### Option 1: From Marketplace (Recommended)
+### Install from GitHub (Recommended)
 
 ```bash
+# Add the repo as a marketplace
+claude marketplace add github:jjcall/ui-research
+
+# Install the plugin
 claude plugin install uir
 ```
 
 Then invoke with:
 ```
-/uir:research planning mode UI
+/uir planning mode UI
 ```
 
-### Option 2: Local Development
+### Local Development
 
 ```bash
 # Clone the repo
@@ -31,25 +35,6 @@ git clone https://github.com/jjcall/ui-research.git ~/Code/ui-research
 
 # Run Claude with plugin directory
 claude --plugin-dir ~/Code/ui-research
-```
-
-Then invoke with:
-```
-/uir:research planning mode UI
-```
-
-### Option 3: As a Standalone Skill (for `/uir` command without namespace)
-
-If you prefer the shorter `/uir` command (without the `:research` suffix), install as a standalone skill:
-
-```bash
-# Create skill directory
-mkdir -p ~/.claude/skills/uir
-
-# Copy skill files
-cp ~/Code/ui-research/SKILL.md ~/.claude/skills/uir/
-cp -r ~/Code/ui-research/scripts ~/.claude/skills/uir/
-cp -r ~/Code/ui-research/data ~/.claude/skills/uir/
 ```
 
 Then invoke with:
@@ -117,27 +102,13 @@ python -m pytest tests/ -v
 python -m pytest tests/ --cov=scripts/lib --cov-report=html
 ```
 
-## Publishing to Marketplace
+## How Distribution Works
 
-To make this plugin available via `claude plugin install uir`:
+This GitHub repo acts as its own marketplace. Users:
+1. Add it: `claude marketplace add github:jjcall/ui-research`
+2. Install: `claude plugin install uir`
 
-1. Host a marketplace JSON file (can be on GitHub, your own server, etc.)
-2. Users add your marketplace: `claude marketplace add <url>`
-3. Users install: `claude plugin install uir`
-
-Example marketplace entry:
-```json
-{
-  "plugins": [
-    {
-      "name": "uir",
-      "version": "1.0.0",
-      "description": "Research UI/UX patterns for any concept",
-      "repository": "https://github.com/jjcall/ui-research"
-    }
-  ]
-}
-```
+The plugin name (`uir`) matches the skill name, so users get `/uir` directly (no namespace).
 
 ## License
 
