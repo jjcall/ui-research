@@ -12,28 +12,56 @@ Research UI/UX patterns for any concept. This Claude plugin decomposes design co
 
 ## Installation
 
-No pip install required - the plugin uses only Python standard library.
+### Option 1: From Marketplace (Recommended)
 
 ```bash
-# Clone to your Claude plugins directory
-cd ~/.claude/plugins
-git clone https://github.com/jjcall/ui-research.git
+claude plugin install uir
 ```
 
-**Optional enhancements:**
-```bash
-# Better HTML parsing (falls back to regex without this)
-pip install beautifulsoup4
+Then invoke with:
+```
+/uir:research planning mode UI
+```
 
-# Tier 0 full-page screenshots
-pip install playwright && playwright install chromium
+### Option 2: Local Development
+
+```bash
+# Clone the repo
+git clone https://github.com/jjcall/ui-research.git ~/Code/ui-research
+
+# Run Claude with plugin directory
+claude --plugin-dir ~/Code/ui-research
+```
+
+Then invoke with:
+```
+/uir:research planning mode UI
+```
+
+### Option 3: As a Standalone Skill (for `/uir` command without namespace)
+
+If you prefer the shorter `/uir` command (without the `:research` suffix), install as a standalone skill:
+
+```bash
+# Create skill directory
+mkdir -p ~/.claude/skills/uir
+
+# Copy skill files
+cp ~/Code/ui-research/SKILL.md ~/.claude/skills/uir/
+cp -r ~/Code/ui-research/scripts ~/.claude/skills/uir/
+cp -r ~/Code/ui-research/data ~/.claude/skills/uir/
+```
+
+Then invoke with:
+```
+/uir planning mode UI
 ```
 
 ## Usage
 
-### As a Claude Skill
+### Trigger Phrases
 
-Trigger phrases:
+- `/uir:research planning mode UI`
 - "UI research for [concept]"
 - "Design inspiration for [concept]"
 - "How do other apps handle [concept]"
@@ -44,7 +72,7 @@ Trigger phrases:
 # Research a concept
 python scripts/ui_research.py "planning mode UI"
 
-# Check environment
+# Check environment (tier detection)
 python scripts/ui_research.py --diagnose
 
 # Use mock data (for testing)
@@ -55,6 +83,19 @@ python scripts/ui_research.py --history
 
 # Re-run previous research
 python scripts/ui_research.py --rerun abc123
+```
+
+## Optional Dependencies
+
+No pip install required - the plugin uses only Python standard library.
+
+**Optional enhancements:**
+```bash
+# Better HTML parsing (falls back to regex without this)
+pip install beautifulsoup4
+
+# Tier 0 full-page screenshots
+pip install playwright && playwright install chromium
 ```
 
 ## Tiers
@@ -74,6 +115,28 @@ python -m pytest tests/ -v
 
 # Run with coverage
 python -m pytest tests/ --cov=scripts/lib --cov-report=html
+```
+
+## Publishing to Marketplace
+
+To make this plugin available via `claude plugin install uir`:
+
+1. Host a marketplace JSON file (can be on GitHub, your own server, etc.)
+2. Users add your marketplace: `claude marketplace add <url>`
+3. Users install: `claude plugin install uir`
+
+Example marketplace entry:
+```json
+{
+  "plugins": [
+    {
+      "name": "uir",
+      "version": "1.0.0",
+      "description": "Research UI/UX patterns for any concept",
+      "repository": "https://github.com/jjcall/ui-research"
+    }
+  ]
+}
 ```
 
 ## License

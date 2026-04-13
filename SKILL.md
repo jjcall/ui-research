@@ -1,26 +1,6 @@
 ---
-name: uir
-version: "1.0.0"
-description: "Research UI/UX patterns for any concept. Also invoked as 'ui research'. Triggers: 'uir kanban board', 'ui research for X', 'design inspiration for X', 'how do other apps handle X'. Decomposes concepts, searches design sources, generates visual gallery."
-argument-hint: 'uir planning mode, uir kanban boards, ui research for checkout flow'
-allowed-tools: Bash, Read, Write, WebSearch, WebFetch
-user-invocable: true
-metadata:
-  openclaw:
-    emoji: "🎨"
-    requires:
-      bins:
-        - python3
-    optionalBins:
-        - playwright
-    files:
-      - "scripts/*"
-    tags:
-      - design
-      - ui
-      - ux
-      - research
-      - moodboard
+name: research
+description: Research UI/UX patterns for any concept. Use when the user asks for 'ui research', 'design inspiration', 'moodboard', 'UI examples', or 'how do other apps handle X'. Decomposes concepts into searchable patterns, searches design sources (Dribbble, Behance, Mobbin, v0), extracts images, and generates a browsable HTML gallery.
 ---
 
 # UI Research Skill
