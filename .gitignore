@@ -44,6 +44,7 @@ htmlcov/
 # Output
 output/
 screenshots/
+.design-research-output/
 # HTML output files (but keep test fixtures and data templates)
 # *.html is too broad, only ignore output folders
 
