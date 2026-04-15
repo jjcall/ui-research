@@ -21,7 +21,6 @@
     "mobbin",
     "gallery"
   ],
-  "skills": ["./"],
   "hooks": {
     "SessionStart": [{
       "hooks": [{
